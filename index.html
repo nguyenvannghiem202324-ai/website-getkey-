@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Nhật HUB - Get Key</title>
+                <style>
+                        body { background: #0f172a; color: #fff; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+                                .card { background: #1e293b; padding: 25px; border-radius: 12px; border: 1px solid #38bdf8; text-align: center; width: 85%; max-width: 320px; }
+                                        button { background: #0284c7; color: white; border: none; padding: 12px; width: 100%; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 15px; }
+                                                input { width: 90%; padding: 10px; margin-top: 10px; background: #0f172a; border: 1px solid #334155; color: #38bdf8; text-align: center; border-radius: 6px; }
+                                                    </style>
+                                                    </head>
+                                                    <body>
+                                                        <div class="card">
+                                                                <h2>Nhật HUB GetKey</h2>
+                                                                        <p>HWID Thiết Bị:</p>
+                                                                                <input type="text" id="hwid" readonly placeholder="Đang lấy HWID...">
+                                                                                        <button id="btn" onclick="getKeyLink()">Vượt Link4M Để Lấy Key</button>
+                                                                                            </div>
+
+                                                                                                <script>
+                                                                                                        const urlParams = new URLSearchParams(window.location.search);
+                                                                                                                const hwid = urlParams.get('hwid');
+                                                                                                                        if (hwid) {
+                                                                                                                                    document.getElementById('hwid').value = hwid;
+                                                                                                                                            } else {
+                                                                                                                                                        document.getElementById('hwid').value = "Thiếu HWID trên URL!";
+                                                                                                                                                                    document.getElementById('btn').disabled = true;
+                                                                                                                                                                            }
+
+                                                                                                                                                                                    async function getKeyLink() {
+                                                                                                                                                                                                const btn = document.getElementById('btn');
+                                                                                                                                                                                                            btn.innerText = "Đang tạo link...";
+                                                                                                                                                                                                                        btn.disabled = true;
+
+                                                                                                                                                                                                                                    const res = await fetch(`/api/generate-link?hwid=${encodeURIComponent(hwid)}`);
+                                                                                                                                                                                                                                                const data = await res.json();
+
+                                                                                                                                                                                                                                                            if (data.success && data.link) {
+                                                                                                                                                                                                                                                                            window.location.href = data.link;
+                                                                                                                                                                                                                                                                                        } else {
+                                                                                                                                                                                                                                                                                                        alert("Lỗi: " + (data.error || "Không lấy được link"));
+                                                                                                                                                                                                                                                                                                                        btn.innerText = "Thử lại";
+                                                                                                                                                                                                                                                                                                                                        btn.disabled = false;
+                                                                                                                                                                                                                                                                                                                                                    }
+                                                                                                                                                                                                                                                                                                                                                            }
+                                                                                                                                                                                                                                                                                                                                                                </script>
+                                                                                                                                                                                                                                                                                                                                                                </body>
+                                                                                                                                                                                                                                                                                                                                                                </html>
+                                                                                                                                                                                                                                                                                                                                                                
