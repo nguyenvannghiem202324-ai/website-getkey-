@@ -4,7 +4,11 @@ const crypto = require('crypto');
 
 const app = express();
 app.use(express.json());
-app.use(express.static('public'));
+app.get('/', (req, res) => {
+        res.sendFile(__dirname + '/index.html');
+        });
+        
+})
 
 // THAY TOKEN LINK4M CỦA BẠN VÀO ĐÂY
 const LINK4M_TOKEN = '6abb3a6daf162d46ec29b472'; 
