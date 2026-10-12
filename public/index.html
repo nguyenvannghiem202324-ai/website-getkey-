@@ -2,49 +2,61 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nhật HUB - Get Key</title>
-    <style>
-        body { background: #0f172a; color: #fff; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .card { background: #1e293b; padding: 25px; border-radius: 12px; border: 1px solid #38bdf8; text-align: center; width: 85%; max-width: 320px; }
-        button { background: #0284c7; color: white; border: none; padding: 12px; width: 100%; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 15px; }
-        input { width: 90%; padding: 10px; margin-top: 10px; background: #0f172a; border: 1px solid #334155; color: #38bdf8; text-align: center; border-radius: 6px; }
-    </style>
-</head>
-<body>
-    <div class="card">
-        <h2>Nhật HUB GetKey</h2>
-        <p>HWID Thiết Bị:</p>
-        <input type="text" id="hwid" readonly placeholder="Đang lấy HWID...">
-        <button id="btn" onclick="getKeyLink()">Vượt Link4M Để Lấy Key</button>
-    </div>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Get Key System - Nhật HUB</title>
+                <style>
+                        * { box-sizing: border-box; margin: 0; padding: 0; }
+                                body { background-color: #0f172a; color: #f8fafc; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+                                        .container { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 30px; max-width: 450px; width: 100%; text-align: center; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5); }
+                                                h1 { color: #38bdf8; font-size: 24px; margin-bottom: 10px; }
+                                                        p { color: #94a3b8; font-size: 14px; margin-bottom: 20px; }
+                                                                .hwid-box { background: #0f172a; border: 1px solid #475569; padding: 12px; border-radius: 8px; color: #cbd5e1; font-family: monospace; font-size: 13px; word-break: break-all; margin-bottom: 20px; }
+                                                                        .btn-get { background: linear-gradient(135deg, #0284c7, #2563eb); color: white; border: none; padding: 14px 28px; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: all 0.2s; width: 100%; box-shadow: 0 4px 12px rgba(37,99,235,0.3); }
+                                                                                .btn-get:hover { background: linear-gradient(135deg, #0369a1, #1d4ed8); transform: translateY(-2px); }
+                                                                                        .loading { display: none; color: #38bdf8; margin-top: 15px; font-size: 14px; }
+                                                                                            </style>
+                                                                                            </head>
+                                                                                            <body>
+                                                                                                <div class="container">
+                                                                                                        <h1>NHẬT HUB - GET KEY</h1>
+                                                                                                                <p>Vượt qua liên kết quảng cáo để nhận Key kích hoạt 24 Giờ cho Roblox.</p>
+                                                                                                                        
+                                                                                                                                <div class="hwid-box" id="hwidDisplay">Đang tải thông tin HWID...</div>
+                                                                                                                                        
+                                                                                                                                                <button class="btn-get" id="btnGetLink" onclick="generateLink()">LẤY LINK GET KEY</button>
+                                                                                                                                                        <div class="loading" id="loadingText">🔄 Đang khởi tạo link, vui lòng chờ...</div>
+                                                                                                                                                            </div>
 
-    <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        const hwid = urlParams.get('hwid');
-        if (hwid) {
-            document.getElementById('hwid').value = hwid;
-        } else {
-            document.getElementById('hwid').value = "Thiếu HWID trên URL!";
-            document.getElementById('btn').disabled = true;
-        }
+                                                                                                                                                                <script>
+                                                                                                                                                                        const urlParams = new URLSearchParams(window.location.search);
+                                                                                                                                                                                const hwid = urlParams.get('hwid') || 'HWID-TEST-DEMO-12345';
+                                                                                                                                                                                        document.getElementById('hwidDisplay').innerText = "HWID: " + hwid;
 
-        async function getKeyLink() {
-            const btn = document.getElementById('btn');
-            btn.innerText = "Đang tạo link...";
-            btn.disabled = true;
+                                                                                                                                                                                                async function generateLink() {
+                                                                                                                                                                                                            const btn = document.getElementById('btnGetLink');
+                                                                                                                                                                                                                        const loading = document.getElementById('loadingText');
 
-            const res = await fetch(`/api/generate-link?hwid=${encodeURIComponent(hwid)}`);
-            const data = await res.json();
+                                                                                                                                                                                                                                    btn.style.display = 'none';
+                                                                                                                                                                                                                                                loading.style.display = 'block';
 
-            if (data.success && data.link) {
-                window.location.href = data.link;
-            } else {
-                alert("Lỗi: " + (data.error || "Không lấy được link"));
-                btn.innerText = "Thử lại";
-                btn.disabled = false;
-            }
-        }
-    </script>
-</body>
-</html>
+                                                                                                                                                                                                                                                            try {
+                                                                                                                                                                                                                                                                            const res = await fetch(`/api/generate-link?hwid=${encodeURIComponent(hwid)}`);
+                                                                                                                                                                                                                                                                                            const data = await res.json();
+
+                                                                                                                                                                                                                                                                                                            if (data.success && data.link) {
+                                                                                                                                                                                                                                                                                                                                window.location.href = data.link;
+                                                                                                                                                                                                                                                                                                                                                } else {
+                                                                                                                                                                                                                                                                                                                                                                    alert("Có lỗi xảy ra: " + (data.error || "Không lấy được link"));
+                                                                                                                                                                                                                                                                                                                                                                                        btn.style.display = 'block';
+                                                                                                                                                                                                                                                                                                                                                                                                            loading.style.display = 'none';
+                                                                                                                                                                                                                                                                                                                                                                                                                            }
+                                                                                                                                                                                                                                                                                                                                                                                                                                        } catch (e) {
+                                                                                                                                                                                                                                                                                                                                                                                                                                                        alert("Lỗi kết nối Server!");
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                        btn.style.display = 'block';
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        loading.style.display = 'none';
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    }
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            }
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </script>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </body>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </html>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
