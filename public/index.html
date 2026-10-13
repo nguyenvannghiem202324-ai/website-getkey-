@@ -1,482 +1,110 @@
-<!DOCTYPE html>
-<html lang="vi" class="dark scroll-smooth">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NHẬT HUB VIP — Link4M Automated Key System</title>
-    
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;600;700&family=Syncopate:wght@700;800&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<!doctype html>
+<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#020813"><title>QUANTUM — GetKey System</title>
+<style>
+:root{--c:#00dfff;--b:#031626;--m:#7da8c2;--g:#28ff9b;--r:#ff5378}*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% 45%,#06213a,#020813 58%,#01050c);color:#c9f5ff;font:14px Inter,Segoe UI,Arial,sans-serif;min-height:100vh;overflow-x:hidden}button,input{font:inherit}button{cursor:pointer;color:inherit}#stars{position:fixed;inset:0;width:100%;height:100%;z-index:-3}.grid{position:fixed;inset:0;z-index:-2;pointer-events:none;background-image:linear-gradient(#00b9ff0c 1px,transparent 1px),linear-gradient(90deg,#00b9ff0c 1px,transparent 1px);background-size:34px 34px;animation:grid 18s linear infinite}.scanlines{position:fixed;inset:0;pointer-events:none;z-index:8;opacity:.09;background:repeating-linear-gradient(transparent 0 3px,#00d6ff24 4px,transparent 5px)}@keyframes grid{to{background-position:34px 34px}}@keyframes rot{to{transform:rotate(360deg)}}@keyframes back{to{transform:rotate(-360deg)}}@keyframes pulse{50%{transform:scale(1.04);filter:brightness(1.4)}}@keyframes enter{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:none}}@keyframes shine{to{left:140%}}@keyframes blink{50%{opacity:.3}}.top{max-width:1460px;margin:auto;padding:22px 28px 10px;display:flex;align-items:center;justify-content:space-between;gap:15px}.brand{display:flex;align-items:center;gap:12px;font-size:clamp(20px,2.4vw,30px);font-weight:800;letter-spacing:.18em;text-shadow:0 0 20px #00dfff88}.logo{width:38px;height:38px;border:1px solid var(--c);display:grid;place-items:center;box-shadow:0 0 18px #00dfff66;clip-path:polygon(20% 0,100% 0,100% 80%,80% 100%,0 100%,0 20%)}.brand small{display:block;font-size:10px;letter-spacing:.35em;color:#83cde8;font-weight:500;margin-top:5px;text-shadow:none}.online{color:var(--g);font-size:11px;letter-spacing:.12em}.dot{display:inline-block;width:7px;height:7px;background:var(--g);border-radius:50%;box-shadow:0 0 12px var(--g);margin-right:8px;animation:blink 1.5s infinite}.topline{max-width:1460px;margin:0 auto 17px;padding:0 28px;text-align:center;color:var(--c);font-size:11px;letter-spacing:.16em}.topline:before,.topline:after{content:"";display:inline-block;width:25%;height:1px;vertical-align:middle;background:linear-gradient(90deg,transparent,#00dfff88);margin:0 18px}.layout{max-width:1460px;margin:auto;padding:0 28px 24px;display:grid;grid-template-columns:220px minmax(0,1fr);gap:24px}.panel{position:relative;background:linear-gradient(135deg,#04182beF,#010a14ed);border:1px solid #00dfff70;box-shadow:0 0 16px #00dfff20,0 0 35px #008bff13;clip-path:polygon(0 14px,14px 0,calc(100% - 20px) 0,100% 20px,100% calc(100% - 14px),calc(100% - 14px) 100%,14px 100%,0 calc(100% - 14px));overflow:hidden}.panel:after{content:"";position:absolute;inset:5px;border:1px solid #00dfff18;pointer-events:none}.side{display:flex;flex-direction:column;gap:18px;animation:enter .7s both}.launch{text-align:center;padding:18px 15px 14px}.title{font-size:15px;letter-spacing:.18em;margin-bottom:7px}.eyebrow{font-size:10px;letter-spacing:.18em;color:#68d8f7}.orb{width:140px;height:140px;margin:15px auto;display:grid;place-items:center;position:relative}.ring{position:absolute;inset:0;border:1px solid #00dfff88;border-radius:50%;box-shadow:0 0 13px #00dfff20}.ring:nth-child(1){inset:3px;border-style:dashed;animation:rot 20s linear infinite}.ring:nth-child(2){inset:14px;animation:back 12s linear infinite}.ring:nth-child(3){inset:25px;border-style:dotted;animation:rot 8s linear infinite}.ring:nth-child(4){inset:36px;border-color:#178cff;animation:back 5s linear infinite}.keyIcon{width:50px;color:var(--c);filter:drop-shadow(0 0 13px #00dfff);animation:pulse 3s infinite}.mini{padding:9px;border:1px solid #00cfff30;background:#00111f;color:var(--c);font-size:11px;letter-spacing:.15em;margin:8px 0}.btn{position:relative;border:1px solid var(--c);background:linear-gradient(110deg,#034365,#00658b 48%,#06334e);padding:13px 14px;text-transform:uppercase;letter-spacing:.09em;font-size:12px;box-shadow:0 0 15px #00cfff24,inset 0 0 14px #00dfff17;transition:.2s;overflow:hidden}.btn:before{content:"";position:absolute;top:-100%;bottom:-100%;left:-40%;width:24%;background:linear-gradient(90deg,transparent,#baf8ff7a,transparent);transform:skewX(-22deg);animation:shine 3.5s infinite}.btn:hover{filter:brightness(1.35);transform:translateY(-1px);box-shadow:0 0 24px #00dfff66}.full{width:100%}.tinybuttons{display:flex;gap:5px;margin-top:12px}.tinybuttons button{flex:1;padding:8px 0;background:#031321;border:1px solid #0a5271;color:#78dfff}.guide{padding:16px;font-size:12px;line-height:1.9;color:#a9d4e8}.guide h3{margin:0 0 7px;color:var(--c);font-size:13px;letter-spacing:.13em}.guide ol{margin:0;padding-left:20px}.guide .note{border-top:1px solid #0d4761;margin-top:9px;padding-top:8px;color:var(--c)}.main{padding:27px 27px 17px;animation:enter .8s .1s both;min-width:0}.corner{position:absolute;top:0;left:50%;transform:translateX(-50%);padding:7px 25px;background:#03172a;border:1px solid var(--c);color:var(--c);font-size:10px;letter-spacing:.15em;white-space:nowrap}.close{position:absolute;right:16px;top:14px;border:0;background:none;color:#9beaff;font-size:24px;z-index:2}.hero{display:flex;justify-content:space-between;align-items:center;gap:15px;padding:14px 8px 20px}.heroL{display:flex;align-items:center;gap:15px}.shield{width:54px;height:62px;color:var(--c);filter:drop-shadow(0 0 12px #00dfff88);flex-shrink:0}h1{font-size:clamp(17px,2vw,28px);font-weight:650;margin:0;color:#1ce8ff;text-shadow:0 0 18px #00cfff38}.sub{margin-top:7px;color:#7dbbd5;font-size:13px}.device{border:1px solid #116486;background:#031626;padding:10px 12px;display:flex;align-items:center;gap:10px;min-width:175px}.device svg{width:27px;color:var(--c)}.device small{display:block;color:var(--c);font-size:10px;letter-spacing:.15em;margin-bottom:5px}.device b{font-size:11px;color:#9ed6ed;font-weight:500;overflow-wrap:anywhere}.steps{display:grid;grid-template-columns:repeat(3,1fr);margin:3px 8px 23px}.step{text-align:center;color:#6997b2;font-size:10px;letter-spacing:.08em;position:relative}.step:not(:last-child):after{content:"";position:absolute;left:67%;width:66%;height:1px;top:22px;background:linear-gradient(90deg,var(--c),#00a4ff);box-shadow:0 0 8px var(--c)}.stepIcon{width:44px;height:44px;border:1px solid #1683a7;border-radius:50%;display:grid;place-items:center;margin:0 auto 7px;background:#031626;position:relative;z-index:1}.stepIcon svg{width:22px;color:#67dfff}.step.active{color:var(--c)}.step.active .stepIcon{border-color:var(--c);background:#00374d;box-shadow:0 0 20px #00dfff77;animation:pulse 2s infinite}.content{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(235px,.9fr);gap:24px;align-items:center}.form{padding:21px 19px;border:1px solid #116486;background:linear-gradient(145deg,#031b2eaa,#010a14d9);position:relative}.form:before{content:"";position:absolute;top:-1px;left:18px;width:100px;height:2px;background:var(--c);box-shadow:0 0 12px var(--c)}.form h2{margin:0 0 16px;font-size:15px;color:var(--c);letter-spacing:.07em}.input{display:flex;align-items:center;border:1px solid #00cfff;background:#010c18;min-height:53px}.input .ico{width:47px;display:grid;place-items:center;color:#75dfff;border-right:1px solid #124b65;flex-shrink:0}.input svg{width:23px}.input input{width:100%;min-width:0;border:0;outline:0;background:transparent;color:#e0fbff;padding:14px 13px;font-size:14px}.input input::placeholder{color:#50758d}.input button{border:0;background:transparent;color:#78dfff;padding:10px 12px}.actions{display:grid;gap:12px;margin-top:16px}.verify{font-size:15px;font-weight:700;padding:17px;letter-spacing:.12em}.getkey{background:linear-gradient(100deg,#041a2b,#031421);text-align:left;display:flex;align-items:center;justify-content:space-between;font-size:12px}.getkey span{display:flex;align-items:center;gap:12px}.getkey svg{width:23px;color:#69dfff}.skipkey{width:100%;padding:10px 8px;border:1px dashed #167b98;background:#021421;color:#80dff5;font-size:10px;letter-spacing:.08em;transition:.2s}.skipkey:hover{background:#063047;color:#e0fbff;box-shadow:0 0 15px #00dfff25}.feedback{margin-top:13px;min-height:38px;border:1px solid #0c405a;background:#00101c;padding:10px;display:flex;align-items:center;gap:9px;font-size:11px;color:#83bdd5}.light{width:7px;height:7px;border-radius:50%;background:#f8c95d;box-shadow:0 0 10px #f8c95d;flex-shrink:0}.feedback[data-type=success]{color:var(--g);border-color:#147b5b}.feedback[data-type=success] .light{background:var(--g)}.feedback[data-type=error]{color:var(--r);border-color:#81304a}.feedback[data-type=error] .light{background:var(--r)}.feedback[data-type=loading] .light{animation:blink .5s infinite}.scannerArea{text-align:center;display:flex;flex-direction:column;align-items:center}.scanner{width:min(100%,320px);aspect-ratio:1;position:relative;display:grid;place-items:center}.scanner:before{content:"";position:absolute;inset:0;border:1px solid #00dfff35;border-radius:50%}.scanRing{position:absolute;border:1px solid #00daff80;border-radius:50%;inset:7%}.scanRing.a{inset:12%;border-style:dashed;animation:rot 30s linear infinite}.scanRing.b{inset:19%;border:4px solid transparent;border-right-color:var(--c);border-bottom-color:#147dff;animation:back 7s linear infinite}.scanRing.c{inset:27%;border-style:dotted;animation:rot 13s linear infinite}.scanRing.d{inset:35%;border:2px solid #009dff;box-shadow:0 0 22px #00cfff55,inset 0 0 25px #00cfff19;animation:pulse 2.5s infinite}.scanRing.e{inset:4%;border-color:#0d6487;clip-path:polygon(0 0,100% 0,100% 22%,0 22%);animation:rot 8s linear infinite}.scanner:after{content:"";position:absolute;inset:4%;border-radius:50%;background:conic-gradient(transparent 72%,#00dfff08 78%,#00dfff88 83%,transparent 90%);animation:rot 4s linear infinite;mask:radial-gradient(circle,transparent 48%,#000 50%,#000 55%,transparent 57%);pointer-events:none}.centerShield{width:105px;height:115px;color:var(--c);filter:drop-shadow(0 0 13px #00dfff99);animation:pulse 3s infinite;z-index:1}.scanLabel{margin-top:4px;font-size:10px;color:#3fa7c9;letter-spacing:.2em}.scanStatus{font-size:19px;color:var(--c);letter-spacing:.05em;margin:9px 0}.scanDesc{font-size:12px;color:#82b7cf;min-height:18px}.dots{display:flex;gap:11px;margin-top:16px}.dots i{width:6px;height:6px;background:#0a4160;border-radius:50%}.dots i:first-child{background:var(--c);box-shadow:0 0 10px var(--c);animation:blink 1.5s infinite}.metrics{display:grid;grid-template-columns:repeat(3,1fr);margin-top:21px;border:1px solid #0d4561;background:#02111f}.metric{padding:13px;display:flex;align-items:center;gap:10px;border-right:1px solid #0d4561;min-width:0}.metric:last-child{border:0}.metric svg{width:24px;color:var(--c);flex-shrink:0}.metric small{display:block;font-size:9px;color:var(--c);margin-bottom:6px}.metric b{font-size:10px;font-weight:500;color:#9bcde0}.good{color:#49ffa8!important}.copyright{text-align:center;padding-top:17px;color:#4f8ba8;font-size:10px;letter-spacing:.05em}.footer{max-width:1460px;margin:0 auto 25px;padding:0 28px}.footGrid{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid #0b6a8b;background:linear-gradient(90deg,#021522,#03101d);box-shadow:0 0 20px #00dfff1b}.foot{display:flex;align-items:center;gap:12px;padding:17px;border-right:1px solid #0b3b52;min-width:0}.foot:last-child{border:0}.footIcon{width:45px;height:45px;border:1px solid #12516d;border-radius:50%;display:grid;place-items:center;color:var(--c);flex-shrink:0}.footIcon svg{width:24px}.foot strong{display:block;font-size:11px;color:var(--c);letter-spacing:.08em;margin-bottom:6px}.foot span{display:block;color:#8ab6cc;font-size:10px;line-height:1.5}.toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:#031b2c;border:1px solid var(--c);padding:12px 18px;box-shadow:0 0 20px #00dfff44;z-index:20;font-size:12px;transition:.3s}.toast.show{opacity:1;transform:translate(-50%,0)}.backdrop{position:fixed;inset:0;background:#000b;display:none;place-items:center;z-index:30;padding:20px;backdrop-filter:blur(7px)}.backdrop.open{display:grid;animation:enter .25s}.modal{width:min(100%,430px);padding:25px;border:1px solid var(--c);background:linear-gradient(145deg,#041c30,#010710);box-shadow:0 0 45px #00dfff25;position:relative}.modal h2{color:var(--c);font-size:17px;letter-spacing:.1em;margin:0 0 12px}.modal p{color:#9bc7da;font-size:13px;line-height:1.6}.modal button{margin-top:10px}
+@media(max-width:1000px){.layout{grid-template-columns:190px minmax(0,1fr);gap:15px;padding:0 16px 20px}.top,.topline,.footer{padding-left:16px;padding-right:16px}.main{padding:27px 17px 15px}.content{grid-template-columns:minmax(0,1fr) minmax(190px,.8fr);gap:14px}.scanner{width:min(100%,260px)}.foot{padding:12px;gap:8px}.footIcon{width:37px;height:37px}}
+@media(max-width:720px){.top{padding:17px 13px 8px}.brand{font-size:20px}.online{font-size:9px}.topline{padding:0 12px;margin-bottom:12px;font-size:9px}.topline:before,.topline:after{margin:0 8px}.layout{display:flex;flex-direction:column;padding:0 11px 16px;gap:11px}.side{display:grid;grid-template-columns:1fr 1fr;gap:9px}.launch{padding:12px 9px}.orb{width:90px;height:90px;margin:8px auto}.keyIcon{width:34px}.guide{padding:12px;font-size:10px;line-height:1.75}.guide h3{font-size:11px}.mini{font-size:9px;padding:7px 2px}.btn{padding:10px 8px;font-size:10px}.tinybuttons button{padding:7px 0}.main{min-height:0;padding:27px 12px 13px}.corner{font-size:8px;padding:7px 12px}.hero{padding:13px 2px 15px;align-items:flex-start}.heroL{gap:8px}.shield{width:37px;height:43px}h1{font-size:15px}.sub{font-size:10px}.device{min-width:0;max-width:105px;padding:7px;gap:5px}.device svg{width:18px}.device small{font-size:7px}.device b{font-size:8px}.close{right:7px;top:23px;font-size:19px}.steps{margin:0 0 17px}.step{font-size:8px}.stepIcon{width:34px;height:34px}.stepIcon svg{width:18px}.step:not(:last-child):after{top:17px}.content{grid-template-columns:1fr;gap:14px}.form{padding:16px 12px}.form h2{font-size:12px}.input{min-height:47px}.input .ico{width:39px}.input input{font-size:12px;padding:12px 8px}.verify{font-size:13px;padding:14px}.getkey{font-size:10px}.scannerArea{padding:0}.scanner{width:min(68vw,230px)}.centerShield{width:75px;height:85px}.scanStatus{font-size:16px}.metrics{grid-template-columns:1fr;margin-top:15px}.metric{border-right:0;border-bottom:1px solid #0d4561;padding:10px}.metric:last-child{border-bottom:0}.footer{padding:0 11px;margin-bottom:15px}.footGrid{grid-template-columns:1fr 1fr}.foot{padding:11px 9px;border-bottom:1px solid #0b3b52}.foot:nth-child(2){border-right:0}.foot:nth-child(3),.foot:nth-child(4){border-bottom:0}.footIcon{width:31px;height:31px}.footIcon svg{width:17px}.foot strong{font-size:9px}.foot span{font-size:9px}}
+@media(max-width:380px){.side{grid-template-columns:1fr}.launch{display:grid;grid-template-columns:75px 1fr;align-items:center;text-align:left;column-gap:10px}.launch .title,.launch .eyebrow,.launch .mini,.launch>.btn,.tinybuttons{grid-column:2}.launch .title{margin:0}.orb{grid-row:1/4;width:70px;height:70px;margin:0}.device{display:none}.hero{padding-top:18px}}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important}}
+</style></head><body>
+<canvas id="stars"></canvas><div class="grid"></div><div class="scanlines"></div>
+<header class="top"><div class="brand"><span class="logo">⌁</span><div>QUANTUM<small>GETKEY SYSTEM</small></div></div><div class="online"><i class="dot"></i><span id="online">SYSTEM ONLINE</span>　<span id="clock">--:--:-- UTC</span></div></header>
+<div class="topline">♙ AUTHENTICATION REQUIRED ♙</div>
+<div class="layout">
+<aside class="side">
+<section class="panel launch"><div class="title">NHAT HUB</div><div class="eyebrow">QUANTUM ACCESS NODE</div><div class="orb"><i class="ring"></i><i class="ring"></i><i class="ring"></i><i class="ring"></i><svg class="keyIcon" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="43" cy="18" r="11"/><path d="M35 26 12 49v7h9v-8h8v-8h8"/></svg></div><div class="eyebrow">STATUS</div><div class="mini" id="miniStatus">WAITING FOR KEY</div><button class="btn full" id="openPanel">OPEN PANEL　↗</button><div class="tinybuttons"><button id="sound">♫ OFF</button><button id="security">⛨</button><button id="help">ⓘ</button></div></section>
+<section class="panel guide"><h3>HƯỚNG DẪN</h3><ol><li>Nhấn GET KEY VIA LINK4M</li><li>Hoàn tất checkpoint trên Link4M</li><li>Mã Key 24H sẽ tự động gắn với HWID</li><li>Copy mã Key và dán vào Script Roblox</li></ol><div class="note">▣ Key có thể được ràng buộc với thiết bị</div></section>
+</aside>
+<main class="panel main" id="mainPanel"><div class="corner">♙ AUTHENTICATION REQUIRED ♙</div><button class="close" id="closePanel" aria-label="Đóng">×</button>
+<section class="hero"><div class="heroL"><svg class="shield" viewBox="0 0 64 72" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M32 3 57 13v20c0 16-11 27-25 35C18 60 7 49 7 33V13z"/><rect x="22" y="29" width="20" height="16" rx="3"/><path d="M26 29v-5a6 6 0 0 1 12 0v5"/></svg><div><h1>NHAT HUB — ACCESS VERIFICATION</h1><div class="sub">Secure · Fast · Reliable</div></div></div><div class="device"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M16 3c-7 0-12 5-12 12m3 0c0-5 4-9 9-9s9 4 9 9m-15 0a6 6 0 0 1 12 0c0 7-3 10-6 13m-5-13c0 4-1 7-3 9m8-9c0 8-1 11-3 14"/></svg><div><small>DEVICE ID</small><b id="deviceId">LOCAL SESSION</b></div></div></section>
+<div class="steps"><div class="step active" id="getStep"><div class="stepIcon">⌁</div>INITIALIZE</div><div class="step active" id="verifyStep"><div class="stepIcon">♙</div>SYSTEM CHECK</div><div class="step" id="grantStep"><div class="stepIcon">⛨</div>ACCESS STATUS</div></div>
+<div class="content"><section class="form" id="entryPanel"><h2>QUANTUM GETKEY</h2>
+<div style="border:1px solid #116486;background:#010c18;padding:20px 16px;text-align:center;margin-bottom:16px"><div style="font-size:34px;color:var(--c);text-shadow:0 0 18px #00dfff;margin-bottom:10px">⌁</div><div style="font-size:14px;letter-spacing:.12em;color:#d8faff;margin-bottom:8px">LINK4M CHECKPOINT</div><div style="font-size:12px;line-height:1.8;color:#83bdd5">Nhấn nút bên dưới để tạo và mở link Link4M. Hoàn thành vượt captcha / tìm kiếm bài viết trên Link4M để kích hoạt Key 24 tiếng.</div></div>
+<div class="feedback" id="feedback" data-type="idle" role="status" aria-live="polite"><i class="light"></i><span id="feedbackText">READY — chờ tạo link Link4M.</span></div>
+<div class="actions"><button class="btn verify full" id="getKeyBtn">GET KEY VIA LINK4M　››</button><button class="skipkey" id="copyLinkBtn" hidden>SAO CHÉP LINK</button></div>
+<div style="margin-top:12px;color:#638da4;font-size:10px;line-height:1.7">Hệ thống bảo mật tự động xác nhận thông qua gateway Link4M chính thức.</div>
+</section>
+<section class="scannerArea"><div class="scanner" id="scanner"><i class="scanRing a"></i><i class="scanRing b"></i><i class="scanRing c"></i><i class="scanRing d"></i><i class="scanRing e"></i><svg class="centerShield" viewBox="0 0 100 115" fill="none" stroke="currentColor" stroke-width="3"><path d="M50 5 88 24v31c0 24-17 41-38 53C29 96 12 79 12 55V24z"/><rect x="33" y="48" width="34" height="28" rx="5" fill="#00dfff18"/><path d="M40 48v-8a10 10 0 0 1 20 0v8M50 58v8"/></svg></div><div class="scanLabel">QUANTUM SECURITY SCANNER</div><div class="scanStatus" id="scanStatus">WAITING FOR KEY</div><div class="scanDesc" id="scanDesc">Create a Link4M checkpoint link to continue</div><div class="dots"><i></i><i></i><i></i></div></section></div>
+<div class="metrics"><div class="metric"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 9a15 15 0 0 1 20 0M5 12a10 10 0 0 1 14 0m-11 3a5 5 0 0 1 8 0m-4 4h.01"/></svg><div><small>SECURE CONNECTION</small><b>Encrypted transport*</b></div></div><div class="metric"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="7" rx="1"/><rect x="3" y="14" width="18" height="7" rx="1"/><path d="M7 6h.01M7 17h.01"/></svg><div><small>SERVER STATUS</small><b class="good" id="serverStatus">LINK4M OPERATIONAL</b></div></div><div class="metric"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="m8 9-3 3 3 3m8-6 3 3-3 3m-3-7-2 8"/></svg><div><small>VERSION</small><b>v3.5.0 Quantum</b></div></div></div><div class="copyright">© 2026 NHAT HUB · QUANTUM ACCESS INTERFACE</div>
+</main></div>
+<footer class="footer"><div class="footGrid"><div class="foot"><div class="footIcon">♧</div><div><strong>TIPS</strong><span>Không chia sẻ key cho người khác</span></div></div><div class="foot"><div class="footIcon">⛨</div><div><strong>BẢO MẬT</strong><span>Chỉ xác thực qua website chính thức</span></div></div><div class="foot"><div class="footIcon">▯</div><div><strong>THIẾT BỊ</strong><span>Key có thể được ràng buộc thiết bị</span></div></div><div class="foot"><div class="footIcon">☏</div><div><strong>HỖ TRỢ</strong><span>Liên hệ admin nếu gặp vấn đề</span></div></div></div></footer>
+<div class="toast" id="toast"></div><div class="backdrop" id="backdrop"><div class="modal"><button class="close" id="modalClose" style="top:8px;right:10px">×</button><h2 id="modalTitle">QUANTUM INFO</h2><p id="modalText"></p><button class="btn full" id="modalOK">UNDERSTOOD</button></div></div>
+<script>
+(()=>{'use strict';const $=id=>document.getElementById(id);let soundOn=true,audio=null;
 
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        cyber: {
-                            void: '#030308',
-                            dark: '#080914',
-                            border: 'rgba(0, 240, 255, 0.18)',
-                            cyan: '#00f0ff',
-                            purple: '#a855f7',
-                            pink: '#ff007f',
-                            green: '#10b981',
-                            amber: '#f59e0b'
-                        }
-                    },
-                    fontFamily: {
-                        sync: ['Syncopate', 'sans-serif'],
-                        sans: ['Space Grotesk', 'sans-serif'],
-                        mono: ['JetBrains Mono', 'monospace']
-                    },
-                    animation: {
-                        'pulse-glow': 'pulseGlow 2.5s infinite ease-in-out',
-                        'float': 'float 6s ease-in-out infinite'
-                    },
-                    keyframes: {
-                        pulseGlow: {
-                            '0%, 100%': { boxShadow: '0 0 15px rgba(0, 240, 255, 0.3), inset 0 0 10px rgba(0, 240, 255, 0.1)' },
-                            '50%': { boxShadow: '0 0 30px rgba(0, 240, 255, 0.7), inset 0 0 20px rgba(0, 240, 255, 0.3)' }
-                        },
-                        float: {
-                            '0%, 100%': { transform: 'translateY(0px)' },
-                            '50%': { transform: 'translateY(-8px)' }
-                        }
-                    }
-                }
-            }
+// Auto detect or preserve HWID session parameter
+const urlParams = new URLSearchParams(window.location.search);
+const currentHWID = urlParams.get('hwid') || 'QUANTUM-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+if($('deviceId')) $('deviceId').textContent = currentHWID;
+
+function tone(f=620,d=.075,delay=0,wave='sine',volume=.035){if(!soundOn)return;try{audio=audio||new(window.AudioContext||window.webkitAudioContext)();if(audio.state==='suspended')audio.resume();const start=audio.currentTime+delay,o=audio.createOscillator(),g=audio.createGain();o.type=wave;o.frequency.setValueAtTime(f,start);g.gain.setValueAtTime(.0001,start);g.gain.exponentialRampToValueAtTime(volume,start+.012);g.gain.exponentialRampToValueAtTime(.0001,start+d);o.connect(g);g.connect(audio.destination);o.start(start);o.stop(start+d+.02)}catch(e){}}
+function beep(f=620,d=.075){tone(f,d,0,'sine',.035)}
+function playUI(kind='click'){if(!soundOn)return;if(kind==='success'){tone(620,.12,0,'sine',.04);tone(880,.15,.09,'sine',.04);tone(1175,.2,.19,'triangle',.035)}else if(kind==='error'){tone(330,.12,0,'sawtooth',.022);tone(220,.18,.1,'sawtooth',.02)}else if(kind==='open'){tone(480,.06,0,'triangle',.025);tone(720,.09,.055,'triangle',.03)}else{tone(540,.045,0,'sine',.025);tone(760,.055,.035,'sine',.022)}}
+function toast(s){let t=$('toast');t.textContent=s;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2400)}
+function modal(title,text){$('modalTitle').textContent=title;$('modalText').textContent=text;$('backdrop').classList.add('open')}
+function status(type,msg){$('feedback').dataset.type=type;$('feedbackText').textContent=msg;const map={idle:['WAITING FOR KEY','Create a Link4M checkpoint link to continue'],loading:['GENERATING LINK…','Connecting to Link4M shorten API'],success:['LINK READY','Redirecting to Link4M checkpoint gateway'],error:['REQUEST ERROR','Failed to establish Link4M session']};if(map[type]){$('scanStatus').textContent=map[type][0];$('scanDesc').textContent=map[type][1];$('miniStatus').textContent=map[type][0]}if(type==='loading'){$('scanner').style.filter='brightness(1.5)';$('verifyStep').classList.add('active');$('grantStep').classList.remove('active')}else{$('scanner').style.filter='';if(type==='success')$('grantStep').classList.add('active');else if(type==='error')$('grantStep').classList.remove('active')}if(type==='success')playUI('success');else if(type==='error')playUI('error');else if(type==='loading')playUI('open');else beep(420)}
+$('modalClose').onclick=$('modalOK').onclick=()=>$('backdrop').classList.remove('open');$('backdrop').onclick=e=>{if(e.target===$('backdrop'))$('backdrop').classList.remove('open')};
+
+$('openPanel').onclick=()=>{$('mainPanel').scrollIntoView({behavior:'smooth'});$('mainPanel').animate([{filter:'brightness(1)'},{filter:'brightness(1.5)'},{filter:'brightness(1)'}],500);beep(720)};
+$('closePanel').onclick=()=>{toast('Bảng xác thực luôn sẵn sàng');beep(300)};
+$('sound').textContent='♫ ON';$('sound').onclick=()=>{soundOn=!soundOn;$('sound').textContent=soundOn?'♫ ON':'♫ OFF';if(soundOn){try{audio=audio||new(window.AudioContext||window.webkitAudioContext)();if(audio.state==='suspended')audio.resume()}catch(e){}playUI('success')}toast(soundOn?'Đã bật âm thanh giao diện':'Đã tắt âmthan giao diện')};
+$('security').onclick=()=>modal('QUANTUM SECURITY','Trạng thái bảo mật mã hóa giữa server và cổng xác thực Link4M.');
+$('help').onclick=()=>modal('HƯỚNG DẪN','Nhấn GET KEY VIA LINK4M để server khởi tạo link rút gọn. Bạn cần vượt checkpoint để nhận Key tự động cho Roblox.');
+
+let generatedShortUrl = '';
+async function createGetKeyLink(){
+  const btn=$('getKeyBtn'); btn.disabled=true; btn.textContent='CONNECTING TO LINK4M…';
+  status('loading','Đang yêu cầu server tạo link Link4M…');
+  try {
+    const response=await fetch('/api/getkey',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({ hwid: currentHWID })
+    });
+    const data=await response.json();
+    if(!response.ok||!data.ok) throw new Error(data.message||'Không tạo được link.');
+    generatedShortUrl=data.shortUrl || data.link;
+    $('feedback').dataset.type='success';$('feedbackText').textContent='LINK CREATED — đang mở Link4M…';
+    $('scanStatus').textContent='LINK CREATED';$('scanDesc').textContent='Opening the Link4M checkpoint';$('serverStatus').textContent='LINK4M READY';$('grantStep').classList.add('active');
+    $('copyLinkBtn').hidden=false; 
+    $('copyLinkBtn').onclick=async()=>{
+        try{
+            await navigator.clipboard.writeText(generatedShortUrl);
+            toast('Đã sao chrep link Link4M');
+            playUI('success');
+        }catch{
+            modal('LINK4M URL',generatedShortUrl);
         }
-    </script>
+    };
+    playUI('success'); 
+    window.open(generatedShortUrl,'_blank','noopener,noreferrer');
+    toast('Đã mở link Link4M');
+  } catch(err) { 
+    status('error',err.message); 
+    $('serverStatus').textContent='LINK4M ERROR'; 
+  }
+  finally {
+    btn.disabled=false;
+    btn.textContent='GET KEY VIA LINK4M　››';
+  }
+}
 
-    <style>
-        body { background-color: #030308; color: #f1f5f9; overflow-x: hidden; }
-        .cyber-grid {
-            background-size: 40px 40px;
-            background-image: 
-                linear-gradient(to right, rgba(0, 240, 255, 0.04) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(0, 240, 255, 0.04) 1px, transparent 1px);
-        }
-        .glass-panel {
-            background: rgba(10, 12, 28, 0.75);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(0, 240, 255, 0.2);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.6);
-        }
-        .btn-cyber-primary {
-            background: linear-gradient(135deg, #00f0ff 0%, #00a8ff 100%);
-            color: #030308;
-            font-weight: 800;
-            letter-spacing: 1px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .btn-cyber-primary:hover {
-            box-shadow: 0 0 25px rgba(0, 240, 255, 0.8);
-            transform: translateY(-2px);
-        }
-    </style>
-</head>
+$('getKeyBtn').addEventListener('click',createGetKeyLink);
 
-<body class="min-h-screen flex flex-col justify-between selection:bg-cyber-cyan selection:text-black">
+fetch('/api/status').then(r=>r.json()).then(s=>{ 
+    $('serverStatus').textContent=s.link4mConfigured?'LINK4M READY':'CONFIG REQUIRED'; 
+    if(!s.link4mConfigured){
+        $('feedbackText').textContent='Cần cấu hình Link4M API token trên server.';
+        $('scanDesc').textContent='Configure Link4M API token on the server';
+    } 
+}).catch(()=>{$('serverStatus').textContent='SERVER OFFLINE'});
 
-    <canvas id="bg-canvas" class="fixed top-0 left-0 w-full h-full pointer-events-none z-0 opacity-60"></canvas>
-    <div class="fixed inset-0 cyber-grid pointer-events-none z-0"></div>
+function clock(){$('clock').textContent=new Date().toISOString().slice(11,19)+' UTC'}clock();setInterval(clock,1000);
 
-    <!-- Toast Notification -->
-    <div id="toast-banner" class="hidden fixed bottom-6 right-6 z-50 transform transition-all p-4 rounded-xl glass-panel border-l-4 border-l-cyber-cyan flex items-center justify-between text-xs font-mono text-cyber-cyan shadow-2xl max-w-sm">
-        <div class="flex items-center gap-3">
-            <i class="fa-solid fa-bell"></i>
-            <span id="toast-text">Alert message...</span>
-        </div>
-        <button onclick="closeToast()" class="ml-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
-    </div>
-
-    <!-- Header -->
-    <header class="relative z-40 border-b border-cyber-border/60 bg-cyber-void/80 backdrop-blur-xl sticky top-0">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-            <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('getkey')">
-                <div class="relative w-12 h-12 rounded-xl bg-gradient-to-tr from-cyber-purple via-cyber-pink to-cyber-cyan p-0.5 animate-pulse-glow">
-                    <div class="w-full h-full bg-cyber-void rounded-[10px] flex items-center justify-center text-cyber-cyan text-xl">
-                        <i class="fa-solid fa-atom animate-spin" style="animation-duration: 12s;"></i>
-                    </div>
-                </div>
-                <div>
-                    <h1 class="font-sync font-extrabold text-xl tracking-wider text-white flex items-center gap-2">
-                        NHẬT<span class="text-cyber-cyan">HUB</span>
-                        <span class="text-[9px] px-2 py-0.5 rounded-full bg-cyber-cyan/10 border border-cyber-cyan/40 text-cyber-cyan font-mono uppercase">
-                            LINK4M GATEWAY
-                        </span>
-                    </h1>
-                    <p class="text-[10px] text-gray-400 font-mono flex items-center gap-1.5">
-                        <span class="w-2 h-2 rounded-full bg-cyber-green inline-block animate-ping"></span>
-                        CỔNG XÁC THỰC KEY 24H
-                    </p>
-                </div>
-            </div>
-
-            <nav class="hidden md:flex items-center space-x-2 bg-cyber-dark/80 p-1.5 rounded-2xl border border-cyber-border/60">
-                <button onclick="switchTab('getkey')" id="tab-btn-getkey" class="px-5 py-2.5 rounded-xl text-xs font-mono font-bold text-cyber-cyan bg-cyber-cyan/10 border border-cyber-cyan/50">
-                    <i class="fa-solid fa-link mr-1.5"></i> GET KEY (LINK4M)
-                </button>
-                <button onclick="switchTab('verify')" id="tab-btn-verify" class="px-5 py-2.5 rounded-xl text-xs font-mono font-bold text-gray-400 hover:text-white">
-                    <i class="fa-solid fa-shield-halved mr-1.5"></i> KIỂM TRA KEY
-                </button>
-                <button onclick="switchTab('code')" id="tab-btn-code" class="px-5 py-2.5 rounded-xl text-xs font-mono font-bold text-gray-400 hover:text-white">
-                    <i class="fa-solid fa-code mr-1.5"></i> SCRIPT LUAU
-                </button>
-            </nav>
-
-            <button onclick="toggleAudio()" class="w-10 h-10 rounded-xl bg-cyber-dark border border-cyber-border text-gray-400 hover:text-cyber-cyan flex items-center justify-center">
-                <i class="fa-solid fa-volume-high" id="sound-icon"></i>
-            </button>
-        </div>
-    </header>
-
-    <!-- Main Content Container -->
-    <main class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full space-y-8">
-
-        <!-- TAB 1: GET KEY VIA LINK4M -->
-        <section id="tab-getkey" class="tab-content transition-all duration-500 space-y-8">
-            <div class="relative rounded-3xl glass-panel p-8 sm:p-10 overflow-hidden border border-cyber-cyan/30 animate-float">
-                <div class="relative z-10 max-w-3xl space-y-3">
-                    <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-cyber-cyan/10 border border-cyber-cyan/30 text-cyber-cyan text-xs font-mono font-bold uppercase">
-                        <i class="fa-solid fa-fire text-cyber-pink animate-pulse"></i> NHẬT HUB — XÁC THỰC QUA LINK4M
-                    </div>
-                    <h2 class="text-3xl sm:text-4xl font-sync font-extrabold text-white">
-                        HỆ THỐNG GET KEY TỰ ĐỘNG LINK4M
-                    </h2>
-                    <p class="text-gray-300 text-sm font-sans">
-                        Nhập HWID thiết bị Roblox của bạn, vượt qua liên kết xác thực Link4M để kích hoạt mã Key 24 Giờ cho Nhật HUB Script.
-                    </p>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                <div class="lg:col-span-8 glass-panel p-6 sm:p-8 rounded-3xl border border-cyber-border shadow-2xl">
-                    <div class="flex items-center justify-between mb-8 pb-4 border-b border-cyber-border/60">
-                        <div>
-                            <h3 class="font-sync font-bold text-lg text-white flex items-center gap-2.5">
-                                <i class="fa-solid fa-terminal text-cyber-cyan"></i> BẢNG ĐIỀU KHIỂN LINK4M
-                            </h3>
-                            <p class="text-xs font-mono text-gray-400 mt-0.5">Tiến trình tạo link xác minh</p>
-                        </div>
-                        <span id="demo-status-badge" class="px-3.5 py-1 rounded-full text-xs font-mono font-bold bg-amber-500/10 text-amber-400 border border-amber-500/30">
-                            Sẵn Sàng
-                        </span>
-                    </div>
-
-                    <!-- Steps Progress Indicator -->
-                    <div class="mb-10 space-y-2">
-                        <div class="flex justify-between text-[11px] font-mono text-gray-400">
-                            <span id="step-lbl-1" class="text-cyber-cyan font-bold">1. NHẬP HWID</span>
-                            <span id="step-lbl-2">2. CHUYỂN LINK4M</span>
-                            <span id="step-lbl-3">3. NHẬN KEY VIP 24H</span>
-                        </div>
-                        <div class="w-full h-3 bg-cyber-void rounded-full overflow-hidden p-0.5 border border-cyber-border/60">
-                            <div id="sim-progress" class="h-full bg-gradient-to-r from-cyber-cyan via-cyber-purple to-cyber-pink w-1/3 transition-all duration-700 rounded-full"></div>
-                        </div>
-                    </div>
-
-                    <!-- Step 1 Form -->
-                    <div id="step-1-content" class="space-y-6">
-                        <div class="space-y-2">
-                            <label class="block text-xs font-mono text-gray-300 uppercase">
-                                <i class="fa-solid fa-microchip text-cyber-cyan mr-1.5"></i> HWID Thiết Bị Roblox Của Bạn:
-                            </label>
-                            <div class="flex flex-col sm:flex-row gap-3">
-                                <input type="text" id="input-hwid" class="flex-1 bg-cyber-void border border-cyber-border focus:border-cyber-cyan rounded-xl px-4 py-3.5 text-sm text-cyber-cyan font-mono outline-none" placeholder="Nhập HWID từ Roblox...">
-                                <button onclick="generateRandomHWID()" class="px-5 py-3.5 bg-cyber-dark border border-cyber-border hover:border-cyber-purple text-gray-300 rounded-xl text-xs font-mono whitespace-nowrap">
-                                    Random HWID
-                                </button>
-                            </div>
-                        </div>
-                        <button onclick="requestLink4MLink()" class="btn-cyber-primary w-full py-4 rounded-xl text-sm font-sync tracking-wider flex items-center justify-center gap-2">
-                            <span>TẠO LINK4M XÁC THỰC</span> <i class="fa-solid fa-arrow-right"></i>
-                        </button>
-                    </div>
-
-                    <!-- Step 2 Link Generated -->
-                    <div id="step-2-content" class="hidden space-y-6">
-                        <div class="p-8 rounded-2xl glass-panel text-center space-y-4 border border-cyber-purple/40">
-                            <div class="w-16 h-16 mx-auto rounded-2xl bg-cyber-purple/20 text-cyber-purple flex items-center justify-center text-3xl border border-cyber-purple/40 animate-pulse">
-                                <i class="fa-solid fa-up-right-from-square"></i>
-                            </div>
-                            <h4 class="font-sync font-bold text-white text-base">LINK XÁC THỰC LINK4M ĐÃ SẴN SÀNG</h4>
-                            <p class="text-xs text-gray-400 font-mono">Bấm vào nút bên dưới để mở liên kết Link4M. Hoàn thành vượt mã captcha để nhận Key tự động.</p>
-                        </div>
-
-                        <a id="btn-goto-link4m" href="#" target="_blank" onclick="onLink4MClicked()" class="btn-cyber-primary block text-center w-full py-4 rounded-xl text-sm font-sync tracking-wider">
-                            MỞ TRANG LINK4M NGAY <i class="fa-solid fa-external-link-alt ml-2"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Guidance Side Panel -->
-                <div class="lg:col-span-4 space-y-6">
-                    <div class="glass-panel p-6 rounded-3xl border border-cyber-border space-y-4">
-                        <h4 class="font-sync font-bold text-white text-sm flex items-center gap-2">
-                            <i class="fa-solid fa-circle-info text-cyber-cyan"></i> BƯỚC VƯỢT LINK4M
-                        </h4>
-                        <ol class="text-xs text-gray-300 space-y-3 font-sans list-decimal list-inside leading-relaxed">
-                            <li>Nhập mã HWID của thiết bị hoặc để mặc định nếu tự lấy từ Script.</li>
-                            <li>Bấm <strong>"TẠO LINK4M XÁC THỰC"</strong> để nhận link rút gọn.</li>
-                            <li>Hoàn thành yêu cầu captcha / tìm kiếm bài viết trên trang Link4M.</li>
-                            <li>Mã <strong>Key VIP 24h</strong> sẽ tự động được cấp và cấp phép cho HWID của bạn!</li>
-                        </ol>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- TAB 2: VERIFY KEY -->
-        <section id="tab-verify" class="tab-content hidden space-y-8">
-            <div class="max-w-2xl mx-auto glass-panel p-8 rounded-3xl border border-cyber-border space-y-6 shadow-2xl">
-                <div class="border-b border-cyber-border/60 pb-4">
-                    <h3 class="font-sync font-bold text-white text-lg flex items-center gap-2">
-                        <i class="fa-solid fa-shield-halved text-cyber-purple"></i> KIỂM TRA MÃ KEY LINK4M
-                    </h3>
-                    <p class="text-xs font-mono text-gray-400 mt-1">Xác minh thời gian sử dụng và thiết bị đã đăng ký</p>
-                </div>
-
-                <div class="space-y-4">
-                    <div>
-                        <label class="block text-xs font-mono text-gray-300 mb-1">HWID Thiết Bị:</label>
-                        <input type="text" id="check-hwid-input" class="w-full bg-cyber-void border border-cyber-border rounded-xl px-4 py-3 text-xs font-mono text-gray-200 outline-none focus:border-cyber-purple" placeholder="Nhập HWID...">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-mono text-gray-300 mb-1">Mã Key:</label>
-                        <input type="text" id="check-key-input" class="w-full bg-cyber-void border border-cyber-border rounded-xl px-4 py-3 text-xs font-mono text-cyber-cyan outline-none focus:border-cyber-cyan" placeholder="NHAT-HUB-L4M-XXXX-24H">
-                    </div>
-                    <button onclick="verifyKeyInTool()" class="w-full py-4 bg-gradient-to-r from-cyber-purple to-pink-600 text-white font-sync text-xs font-bold rounded-xl tracking-wider shadow-lg shadow-purple-900/30">
-                        XÁC MINH TRỰC TUYẾN
-                    </button>
-                </div>
-
-                <div id="check-result-box" class="p-4 rounded-xl glass-panel hidden text-xs font-mono"></div>
-            </div>
-        </section>
-
-        <!-- TAB 3: LUAU CODE INTEGRATION -->
-        <section id="tab-code" class="tab-content hidden space-y-8">
-            <div class="glass-panel p-8 rounded-3xl border border-cyber-border space-y-4">
-                <div class="flex items-center justify-between border-b border-cyber-border/60 pb-4">
-                    <h3 class="font-sync font-bold text-white text-lg flex items-center gap-2">
-                        <i class="fa-solid fa-code text-cyber-pink"></i> INTEGRATION SCRIPT (ROBLOX LUAU)
-                    </h3>
-                    <button onclick="copyScriptCode()" class="px-4 py-2 bg-cyber-pink/20 text-cyber-pink rounded-xl text-xs font-mono font-bold border border-cyber-pink/40">
-                        <i class="fa-solid fa-copy mr-1"></i> Copy Code
-                    </button>
-                </div>
-                
-                <pre class="bg-cyber-void p-5 rounded-2xl border border-cyber-border/80 overflow-x-auto text-xs font-mono text-gray-300 leading-relaxed"><code id="luau-code-block">local HttpService = game:GetService("HttpService")
-local RbxAnalyticsService = game:GetService("RbxAnalyticsService")
-
--- ĐƯỜNG LINK SERVER CỦA BẠN TRÊN RENDER
-local DOMAIN = "https://website-getkey-script.onrender.com"
-local hwid = RbxAnalyticsService:GetClientId()
-
--- Lấy link GetKey Link4M cho người chơi
-local function getLink4MUrl()
-    local url = DOMAIN .. "/?hwid=" .. HttpService:UrlEncode(hwid)
-    if setclipboard then
-        setclipboard(url)
-        print("✅ [Nhật HUB] Đã copy link GetKey Link4M vào bộ nhớ tạm!")
-    end
-    return url
-end
-
--- Hàm xác thực Key 24 tiếng từ Roblox Script
-local function verifyKey(userKey)
-    local checkUrl = DOMAIN .. "/api/verify?key=" .. HttpService:UrlEncode(userKey) .. "&hwid=" .. HttpService:UrlEncode(hwid)
-    local success, response = pcall(function() return game:HttpGet(checkUrl) end)
-    
-    if success then
-        local data = HttpService:JSONDecode(response)
-        if data.success then
-            print("✅ [Nhật HUB] " .. data.message)
-            print("⏰ Thời gian còn lại: " .. data.formattedRemaining)
-            return true
-        else
-            warn("❌ [Nhật HUB] " .. data.message)
-        end
-    else
-        warn("❌ [Nhật HUB] Lỗi kết nối đến Server xác thực!")
-    end
-    return false
-end
-
--- Tự động copy link Get Key khi người chơi mở Script
-getLink4MUrl()</code></pre>
-            </div>
-        </section>
-
-    </main>
-
-    <footer class="border-t border-cyber-border/40 bg-cyber-void/90 py-6 text-center text-xs text-gray-500 font-mono">
-        © 2026 NHẬT HUB — Powered by Link4M Key System Integration
-    </footer>
-
-    <script>
-        // Background Particle Canvas Network
-        const canvas = document.getElementById('bg-canvas');
-        const ctx = canvas.getContext('2d');
-        let particles = [];
-
-        function initCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            particles = [];
-            for(let i=0; i < Math.floor(canvas.width / 30); i++) {
-                particles.push({
-                    x: Math.random() * canvas.width,
-                    y: Math.random() * canvas.height,
-                    vx: (Math.random() - 0.5) * 0.5,
-                    vy: (Math.random() - 0.5) * 0.5,
-                    color: Math.random() > 0.5 ? '#00f0ff' : '#a855f7'
-                });
-            }
-        }
-
-        function drawParticles() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particles.forEach(p => {
-                p.x += p.vx; p.y += p.vy;
-                if(p.x < 0 || p.x > canvas.width) p.vx *= -1;
-                if(p.y < 0 || p.y > canvas.height) p.vy *= -1;
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, 1.5, 0, Math.PI * 2);
-                ctx.fillStyle = p.color;
-                ctx.fill();
-            });
-            requestAnimationFrame(drawParticles);
-        }
-
-        window.addEventListener('resize', initCanvas);
-        initCanvas(); drawParticles();
-
-        // Sound Effects Engine
-        let soundOn = true;
-        let audioCtx = null;
-
-        function playBeep(freq = 600) {
-            if(!soundOn) return;
-            if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.frequency.value = freq;
-            gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
-            osc.connect(gain); gain.connect(audioCtx.destination);
-            osc.start(); osc.stop(audioCtx.currentTime + 0.1);
-        }
-
-        function toggleAudio() {
-            soundOn = !soundOn;
-            document.getElementById('sound-icon').className = soundOn ? "fa-solid fa-volume-high" : "fa-solid fa-volume-xmark";
-        }
-
-        // Auto Load HWID from URL Query Parameter
-        const urlParams = new URLSearchParams(window.location.search);
-        let currentHWID = urlParams.get('hwid') || "NHAT-HUB-L4M-" + Math.random().toString(36).substring(2, 8).toUpperCase();
-        document.getElementById('input-hwid').value = currentHWID;
-
-        function switchTab(tabName) {
-            playBeep(600);
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            document.getElementById(`tab-${tabName}`).classList.remove('hidden');
-        }
-
-        function generateRandomHWID() {
-            playBeep(700);
-            currentHWID = "NHAT-HUB-L4M-" + Math.random().toString(36).substring(2, 8).toUpperCase();
-            document.getElementById('input-hwid').value = currentHWID;
-        }
-
-        async function requestLink4MLink() {
-            playBeep(800);
-            const hwidInput = document.getElementById('input-hwid').value.trim();
-            if(!hwidInput) {
-                showToast("Vui lòng nhập HWID thiết bị!");
-                return;
-            }
-
-            try {
-                const res = await fetch(`/api/generate-link?hwid=${encodeURIComponent(hwidInput)}`);
-                const data = await res.json();
-
-                if(data.success && data.link) {
-                    document.getElementById('btn-goto-link4m').href = data.link;
-                    
-                    document.getElementById('step-1-content').classList.add('hidden');
-                    document.getElementById('step-2-content').classList.remove('hidden');
-                    
-                    document.getElementById('sim-progress').style.width = '66%';
-                    document.getElementById('step-lbl-2').className = "text-cyber-cyan font-bold";
-                    
-                    showToast("Đã tạo liên kết Link4M thành công!");
-                } else {
-                    showToast("Không thể khởi tạo link Link4M!");
-                }
-            } catch(e) {
-                showToast("Lỗi kết nối tới Server Get Key!");
-            }
-        }
-
-        function onLink4MClicked() {
-            showToast("Đã mở trang Link4M. Vui lòng vượt captcha để nhận Key!");
-        }
-
-        async function verifyKeyInTool() {
-            playBeep(600);
-            const h = document.getElementById('check-hwid-input').value.trim();
-            const k = document.getElementById('check-key-input').value.trim();
-            const resBox = document.getElementById('check-result-box');
-            
-            if(!h || !k) {
-                showToast("Vui lòng nhập đầy đủ HWID và Mã Key!");
-                return;
-            }
-
-            resBox.classList.remove('hidden');
-
-            try {
-                const res = await fetch(`/api/verify?key=${encodeURIComponent(k)}&hwid=${encodeURIComponent(h)}`);
-                const data = await res.json();
-
-                if(data.success) {
-                    resBox.className = "p-4 rounded-xl glass-panel border border-cyber-green/50 text-cyber-green font-mono text-xs";
-                    resBox.innerText = `✅ ACTIVE: ${data.message} (Còn lại: ${data.formattedRemaining})`;
-                } else {
-                    resBox.className = "p-4 rounded-xl glass-panel border border-red-500/50 text-red-400 font-mono text-xs";
-                    resBox.innerText = `❌ LỖI: ${data.message}`;
-                }
-            } catch(e) {
-                resBox.className = "p-4 rounded-xl glass-panel border border-red-500/50 text-red-400 font-mono text-xs";
-                resBox.innerText = "Lỗi hệ thống khi kiểm tra Key!";
-            }
-        }
-
-        function copyScriptCode() {
-            const code = document.getElementById('luau-code-block').innerText;
-            navigator.clipboard.writeText(code);
-            showToast("Đã copy Roblox Luau integration code!");
-        }
-
-        function showToast(msg) {
-            const toast = document.getElementById('toast-banner');
-            document.getElementById('toast-text').innerText = msg;
-            toast.classList.remove('hidden');
-            setTimeout(() => toast.classList.add('hidden'), 3500);
-        }
-
-        function closeToast() {
-            document.getElementById('toast-banner').classList.add('hidden');
-        }
-    </script>
-</body>
-</html>
+const c=$('stars'),x=c.getContext('2d');let w,h,stars=[];
+function resize(){w=c.width=innerWidth*devicePixelRatio;h=c.height=innerHeight*devicePixelRatio;c.style.width=innerWidth+'px';c.style.height=innerHeight+'px';stars=Array.from({length:Math.min(150,Math.floor(innerWidth/8))},()=>({x:Math.random()*w,y:Math.random()*h,r:Math.random()*1.5+.3,v:Math.random()*.22+.04,a:Math.random()*.65+.15}))}
+function draw(){x.clearRect(0,0,w,h);for(const s of stars){s.y-=s.v*devicePixelRatio;if(s.y<0){s.y=h;s.x=Math.random()*w}x.globalAlpha=s.a*(.6+.4*Math.sin(Date.now()/850+s.x));x.fillStyle='#62eaff';x.beginPath();x.arc(s.x,s.y,s.r*devicePixelRatio,0,Math.PI*2);x.fill()}x.globalAlpha=1;requestAnimationFrame(draw)}
+addEventListener('resize',resize);resize();draw();
+document.addEventListener('pointerdown',e=>{if(e.target.closest('button')&&e.target.id!=='sound')playUI('click')},{passive:true});
+})();
+</script></body></html>
