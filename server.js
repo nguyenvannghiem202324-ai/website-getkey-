@@ -1,155 +1,279 @@
 const express = require('express');
 const axios = require('axios');
 const crypto = require('crypto');
+const cors = require('cors');
 const path = require('path');
 
 const app = express();
+const PORT = process.env.PORT || 3000;
+
+// Enable JSON parsing and CORS for Roblox HTTP Requests
 app.use(express.json());
+app.use(cors());
 
-// API Token Link4M của bạn
-const LINK4M_TOKEN = '6abb3a6daf162d46ec29b472'; 
-
-// Lưu trữ dữ liệu trong bộ nhớ tạm
-const keysDatabase = {}; 
-const pendingSessions = {};
-
-// Phục vụ file giao diện tĩnh từ thư mục 'public'
+// Serve static frontend from the 'public' directory
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Trả về file index.html cho trang chủ
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
+// ==========================================
+// CONFIGURATION: LINK4M API TOKEN
+// Thay TOKEN Link4M của bạn ở đây (lấy tại link4m.co)
+// ==========================================
+const LINK4M_TOKEN = process.env.LINK4M_TOKEN || '6abb3a6daf162d46ec29b472';
 
-// API 1: Tạo Link Rút Gọn qua Link4M dựa theo HWID
+// Memory Storage: 
+// keysDatabase: key -> { hwid, expiresAt }
+// pendingSessions: token -> { hwid, createdAt }
+const keysDatabase = new Map();
+const pendingSessions = new Map();
+
+/**
+ * Clean up expired sessions and keys periodically (Every 30 mins)
+ */
+setInterval(() => {
+    const now = Date.now();
+    for (const [token, session] of pendingSessions.entries()) {
+        if (now - session.createdAt > 30 * 60 * 1000) { // 30 min session timeout
+            pendingSessions.delete(token);
+        }
+    }
+    for (const [key, data] of keysDatabase.entries()) {
+        if (now > data.expiresAt) {
+            keysDatabase.delete(key);
+        }
+    }
+}, 30 * 60 * 1000);
+
+/**
+ * API 1: Generate Link4M Verification URL
+ * GET /api/generate-link?hwid=YOUR_HWID
+ */
 app.get('/api/generate-link', async (req, res) => {
     const { hwid } = req.query;
-    if (!hwid) {
-        return res.status(400).json({ success: false, error: 'Thiếu thông tin HWID' });
+
+    if (!hwid || typeof hwid !== 'string' || hwid.trim() === '') {
+        return res.status(400).json({
+            success: false,
+            message: 'Thiếu thông tin HWID thiết bị!'
+        });
     }
 
-    // Tạo session token ngẫu nhiên
+    const cleanHWID = hwid.trim();
     const sessionToken = crypto.randomBytes(16).toString('hex');
-    pendingSessions[sessionToken] = { hwid, createdAt: Date.now() };
+    
+    // Save pending session
+    pendingSessions.set(sessionToken, {
+        hwid: cleanHWID,
+        createdAt: Date.now()
+    });
 
-    // Tự động nhận diện Domain hiện tại trên Render
-    const domain = `${req.protocol}://${req.get('host')}`;
-    const destinationUrl = `${domain}/api/callback?token=${sessionToken}`;
+    // Determine domain automatically
+    const protocol = req.headers['x-forwarded-proto'] || req.protocol;
+    const host = req.get('host');
+    const callbackUrl = `${protocol}://${host}/api/callback?token=${sessionToken}`;
 
     try {
-        const response = await axios.get(`https://link4m.co/api-shorten`, {
-            params: { api: LINK4M_TOKEN, url: destinationUrl }
+        // Request shortened link from Link4M API
+        const response = await axios.get('https://link4m.co/api-shorten', {
+            params: {
+                api: LINK4M_TOKEN,
+                url: callbackUrl
+            },
+            timeout: 8000
         });
 
         if (response.data && response.data.shortenedUrl) {
-            return res.json({ success: true, link: response.data.shortenedUrl });
+            return res.json({
+                success: true,
+                link: response.data.shortenedUrl,
+                token: sessionToken
+            });
         } else {
-            // Dự phòng nếu API Link4M phản hồi định dạng khác
-            return res.json({ 
-                success: true, 
-                link: `https://link4m.co/st?api=${LINK4M_TOKEN}&url=${encodeURIComponent(destinationUrl)}` 
+            // Fallback link construction if API returns raw format
+            const fallbackLink = `https://link4m.co/st?api=${LINK4M_TOKEN}&url=${encodeURIComponent(callbackUrl)}`;
+            return res.json({
+                success: true,
+                link: fallbackLink,
+                token: sessionToken
             });
         }
-    } catch (err) {
-        console.error('Lỗi khi gọi API Link4M:', err.message);
-        // Link fallback dự phòng
-        return res.json({ 
-            success: true, 
-            link: `https://link4m.co/st?api=${LINK4M_TOKEN}&url=${encodeURIComponent(destinationUrl)}` 
+    } catch (error) {
+        console.error('[Link4M API Error]:', error.message);
+        
+        // Backup direct link generator
+        const directLink = `https://link4m.co/st?api=${LINK4M_TOKEN}&url=${encodeURIComponent(callbackUrl)}`;
+        return res.json({
+            success: true,
+            link: directLink,
+            token: sessionToken
         });
     }
 });
 
-// API 2: Nhận kết quả sau khi người dùng vượt link Link4M thành công
+/**
+ * API 2: Link4M Callback Target after bypass completion
+ * GET /api/callback?token=SESSION_TOKEN
+ */
 app.get('/api/callback', (req, res) => {
     const { token } = req.query;
-    const session = pendingSessions[token];
 
-    if (!session) {
+    if (!token || !pendingSessions.has(token)) {
         return res.status(400).send(`
-            <div style="font-family:sans-serif; text-align:center; padding:50px; background:#0f172a; color:#f87171; height:100vh;">
-                <h2>Phiên làm việc đã hết hạn hoặc không hợp lệ!</h2>
-                <p>Vui lòng quay lại giao diện và bấm nút lấy lại Link.</p>
-            </div>
+            <!DOCTYPE html>
+            <html lang="vi">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Lỗi Xác Thực - Nhật HUB</title>
+                <style>
+                    body { background: #030308; color: #ff0055; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; text-align: center; }
+                    .card { background: #080914; border: 1px solid #ff0055; padding: 30px; border-radius: 16px; max-width: 400px; width: 90%; }
+                    h2 { margin-bottom: 10px; }
+                    p { color: #8a8d9b; font-size: 14px; }
+                    a { color: #00f0ff; text-decoration: none; font-weight: bold; }
+                </style>
+            </head>
+            <body>
+                <div class="card">
+                    <h2>❌ Phiên Làm Việc Hết Hạn!</h2>
+                    <p>Phiên xác thực Link4M không tồn tại hoặc đã hết hạn. Vui lòng quay lại trang web để bấm lấy link mới.</p>
+                    <p><a href="/">Quay về trang chủ Get Key</a></p>
+                </div>
+            </body>
+            </html>
         `);
     }
 
-    // Tạo Key 24 giờ cho HWID này
-    const generatedKey = 'NHAT-HUB-' + crypto.randomBytes(4).toString('hex').toUpperCase();
-    const expiresAt = Date.now() + (24 * 60 * 60 * 1000); // 24 tiếng
+    const session = pendingSessions.get(token);
+    
+    // Generate 24-Hour VIP Key
+    const randomCode = crypto.randomBytes(3).toString('hex').toUpperCase();
+    const generatedKey = `NHAT-HUB-L4M-${randomCode}-24H`;
+    const DURATION_MS = 24 * 60 * 60 * 1000; // 24 Hours
+    const expiresAt = Date.now() + DURATION_MS;
 
-    keysDatabase[generatedKey] = {
-        key: generatedKey,
+    // Save key to store bound to HWID
+    keysDatabase.set(generatedKey, {
         hwid: session.hwid,
         expiresAt: expiresAt
-    };
+    });
 
-    delete pendingSessions[token];
+    // Remove pending session
+    pendingSessions.delete(token);
 
+    // Render Success Interface with generated Key
     res.send(`
         <!DOCTYPE html>
         <html lang="vi">
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Lấy Key Thành Công - Nhật HUB</title>
+            <title>Vượt Link4M Thành Công — NHẬT HUB VIP</title>
+            <script src="https://cdn.tailwindcss.com"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+            <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+            <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
             <style>
-                body { background-color: #0f172a; color: #ffffff; font-family: Arial, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-                .card { background-color: #1e293b; padding: 30px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); text-align: center; max-width: 400px; width: 90%; border: 1px solid #334155; }
-                h2 { color: #22c55e; margin-bottom: 10px; }
-                .key-box { font-size: 20px; font-weight: bold; padding: 12px; background: #0f172a; color: #38bdf8; border: 2px dashed #38bdf8; border-radius: 8px; margin: 20px 0; word-break: break-all; }
-                p { color: #94a3b8; font-size: 14px; line-height: 1.5; }
-                .btn { background: #38bdf8; color: #0f172a; border: none; padding: 10px 20px; font-weight: bold; border-radius: 6px; cursor: pointer; margin-top: 10px; }
+                body { background-color: #030308; color: #f1f5f9; font-family: 'Space Grotesk', sans-serif; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+                .glass { background: rgba(10, 12, 28, 0.85); backdrop-filter: blur(16px); border: 1px solid rgba(16, 185, 129, 0.4); box-shadow: 0 0 30px rgba(16, 185, 129, 0.2); }
             </style>
         </head>
         <body>
-            <div class="card">
-                <h2>🎉 VƯỢT LINK THÀNH CÔNG!</h2>
-                <p>HWID của bạn đã được ghi nhận vào hệ thống.</p>
-                <div class="key-box" id="keyBox">${generatedKey}</div>
-                <button class="btn" onclick="navigator.clipboard.writeText('${generatedKey}'); alert('Đã sao chép Key thành công!');">Sao chép Key</button>
-                <p style="margin-top: 15px;">Key có hiệu lực trong <b>24 Giờ</b>. Vui lòng dán Key này vào Script trong Roblox.</p>
+            <div class="glass p-8 sm:p-10 rounded-3xl max-w-md w-full text-center space-y-6">
+                <div class="w-16 h-16 mx-auto rounded-full bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-3xl border border-emerald-500/30 animate-bounce">
+                    <i class="fa-solid fa-check"></i>
+                </div>
+                
+                <div>
+                    <h2 class="text-2xl font-bold text-white uppercase tracking-wider">VƯỢT LINK4M THÀNH CÔNG!</h2>
+                    <p class="text-xs text-emerald-400 font-mono mt-1">✓ Đã xác minh thiết bị qua Link4M Gateway</p>
+                </div>
+
+                <div class="bg-black/60 p-4 rounded-2xl border border-emerald-500/40 space-y-2">
+                    <p class="text-[11px] text-gray-400 font-mono">MÃ KEY NHẬT HUB VIP (24 GIỜ):</p>
+                    <div class="font-mono text-emerald-400 text-lg font-bold tracking-wider select-all break-all" id="keyVal">${generatedKey}</div>
+                </div>
+
+                <button onclick="copyKey()" class="w-full py-4 bg-gradient-to-r from-emerald-500 to-teal-600 text-black font-extrabold rounded-xl text-sm font-mono tracking-wider shadow-lg shadow-emerald-500/30 hover:opacity-90 transition-all">
+                    <i class="fa-solid fa-copy mr-2"></i> SAO CHÉP KEY VÀO SCRIPT
+                </button>
+
+                <div class="text-[11px] text-gray-400 font-mono text-left bg-black/40 p-4 rounded-xl space-y-1.5 border border-white/5">
+                    <div>• <b>HWID Gắn Cố Định:</b> <span class="text-cyan-400">${session.hwid}</span></div>
+                    <div>• <b>Thời Gian Hiệu Lực:</b> <span class="text-amber-400">24 Giờ</span></div>
+                </div>
             </div>
+
+            <script>
+                confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+                function copyKey() {
+                    const k = document.getElementById('keyVal').innerText;
+                    navigator.clipboard.writeText(k);
+                    alert("Đã copy Key thành công! Vui lòng dán vào Roblox Script.");
+                }
+            </script>
         </body>
         </html>
     `);
 });
 
-// API 3: Xác thực Key cho Script Roblox Luau
+/**
+ * API 3: Verify Key Status from Roblox Luau Script
+ * GET /api/verify?key=NHAT-HUB-L4M-XXX-24H&hwid=YOUR_HWID
+ */
 app.get('/api/verify', (req, res) => {
     const { key, hwid } = req.query;
 
     if (!key || !hwid) {
-        return res.json({ success: false, message: 'Thiếu thông tin Key hoặc HWID!' });
+        return res.status(400).json({
+            success: false,
+            message: 'Thiếu thông tin Key hoặc HWID!'
+        });
     }
 
-    const keyData = keysDatabase[key];
+    const cleanKey = key.trim();
+    const cleanHWID = hwid.trim();
 
-    if (!keyData) {
-        return res.json({ success: false, message: 'Key không tồn tại hoặc không hợp lệ!' });
+    const record = keysDatabase.get(cleanKey);
+
+    if (!record) {
+        return res.json({
+            success: false,
+            message: 'Mã Key không tồn tại hoặc chưa được vượt qua Link4M!'
+        });
     }
 
-    if (keyData.hwid !== hwid) {
-        return res.json({ success: false, message: 'Key này được tạo cho thiết bị khác (HWID không khớp)!' });
+    if (record.hwid !== cleanHWID) {
+        return res.json({
+            success: false,
+            message: 'Key này được cấp cho thiết bị (HWID) khác!'
+        });
     }
 
-    const now = Date.now();
-    if (now > keyData.expiresAt) {
-        delete keysDatabase[key];
-        return res.json({ success: false, message: 'Key đã hết hạn sử dụng (24 giờ)!' });
+    if (Date.now() > record.expiresAt) {
+        keysDatabase.delete(cleanKey); // Purge expired key
+        return res.json({
+            success: false,
+            message: 'Key đã hết hạn (quá 24 giờ). Vui lòng thực hiện Get Key lại qua Link4M!'
+        });
     }
 
-    const remainingMs = keyData.expiresAt - now;
-    const remainingSec = Math.floor(remainingMs / 1000);
-    const hours = Math.floor(remainingSec / 3600);
-    const minutes = Math.floor((remainingSec % 3600) / 60);
+    const remainingSeconds = Math.floor((record.expiresAt - Date.now()) / 1000);
+    const hours = Math.floor(remainingSeconds / 3600);
+    const minutes = Math.floor((remainingSeconds % 3600) / 60);
 
     return res.json({
         success: true,
-        message: 'Xác thực Key thành công!',
-        formattedRemaining: `${hours} giờ ${minutes} phút`
+        message: 'Xác thực thành công! Quyền truy cập Nhật HUB VIP được chấp thuận.',
+        formattedRemaining: `${hours} giờ ${minutes} phút`,
+        expiresAt: record.expiresAt
     });
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+// Fallback route: serve index.html
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+app.listen(PORT, () => {
+    console.log(`[NHẬT HUB] Server running on port ${PORT}`);
+});
