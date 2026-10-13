@@ -20,7 +20,6 @@ const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'nhathub2026';
 const DATA_FILE = path.join(__dirname, 'keys.json');
 
 let keysDatabase = new Map();
-const pendingSessions = new Map();
 const serverLogs = [];
 
 function addLog(action, details) {
@@ -67,6 +66,41 @@ setInterval(() => {
 }, 10 * 60 * 1000);
 
 // ==========================================
+// STATELESS CRYPTO SESSION TOKENS (100% Sleep-Proof)
+// ==========================================
+const SECRET_KEY = ADMIN_PASSWORD + '-nhat-hub-quantum-secret';
+
+function createSessionToken(hwid) {
+    const payload = {
+        hwid: hwid,
+        exp: Date.now() + (15 * 60 * 1000) // 15 phút để hoàn thành link4m
+    };
+    const payloadStr = JSON.stringify(payload);
+    const base64Payload = Buffer.from(payloadStr).toString('base64url');
+    const signature = crypto.createHmac('sha256', SECRET_KEY).update(base64Payload).digest('base64url');
+    return `${base64Payload}.${signature}`;
+}
+
+function verifySessionToken(token) {
+    try {
+        const parts = token.split('.');
+        if (parts.length !== 2) return null;
+        const [base64Payload, signature] = parts;
+
+        const expectedSig = crypto.createHmac('sha256', SECRET_KEY).update(base64Payload).digest('base64url');
+        if (signature !== expectedSig) return null;
+
+        const payloadStr = Buffer.from(base64Payload, 'base64url').toString('utf8');
+        const payload = JSON.parse(payloadStr);
+
+        if (Date.now() > payload.exp) return null; // Hết hạn 15 phút
+        return payload;
+    } catch (e) {
+        return null;
+    }
+}
+
+// ==========================================
 // PUBLIC API ENDPOINTS
 // ==========================================
 
@@ -82,12 +116,9 @@ app.get('/api/status', (req, res) => {
 const handleGenerateLink = async (req, res) => {
     const hwid = req.body?.hwid || req.query?.hwid || 'QUANTUM-DEVICE-SESSION';
     const cleanHWID = String(hwid).trim();
-    const sessionToken = crypto.randomBytes(16).toString('hex');
-
-    pendingSessions.set(sessionToken, {
-        hwid: cleanHWID,
-        createdAt: Date.now()
-    });
+    
+    // Tạo token mã hóa tĩnh (không cần lưu RAM, chống lỗi sleep server)
+    const sessionToken = createSessionToken(cleanHWID);
 
     const protocol = req.headers['x-forwarded-proto'] || req.protocol;
     const host = req.get('host');
@@ -123,11 +154,33 @@ app.get('/api/generate-link', handleGenerateLink);
 
 app.get('/api/callback', (req, res) => {
     const { token } = req.query;
-    if (!token || !pendingSessions.has(token)) {
-        return res.status(400).send(`<h3>Phiên xác thực hết hạn hoặc không hợp lệ.</h3>`);
+    if (!token) {
+        return res.status(400).send(`<h3>Thiếu mã thông báo xác thực.</h3>`);
     }
 
-    const session = pendingSessions.get(token);
+    const session = verifySessionToken(token);
+    if (!session) {
+        return res.status(400).send(`
+            <!DOCTYPE html>
+            <html lang="vi">
+            <head>
+                <meta charset="UTF-8">
+                <title>Lỗi Xác Thực</title>
+                <style>
+                    body { background: #030308; color: #ff007f; font-family: monospace; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; text-align: center; }
+                    .card { background: #080914; border: 1px solid rgba(255,0,127,0.3); padding: 40px; border-radius: 16px; box-shadow: 0 0 30px rgba(255,0,127,0.2); max-width: 400px; width: 90%; }
+                </style>
+            </head>
+            <body>
+                <div class="card">
+                    <h2>PHIÊN XÁC THỰC HẾT HẠN</h2>
+                    <p style="color:#94a3b8; font-size:12px; margin-top:10px;">Vui lòng quay lại trang chính và lấy lại link Link4M mới (thời hạn vượt link trong vòng 15 phút).</p>
+                </div>
+            </body>
+            </html>
+        `);
+    }
+
     const randomCode = crypto.randomBytes(3).toString('hex').toUpperCase();
     const generatedKey = `NHAT-HUB-L4M-${randomCode}-24H`;
     const expiresAt = Date.now() + (24 * 60 * 60 * 1000);
@@ -138,7 +191,7 @@ app.get('/api/callback', (req, res) => {
         expiresAt: expiresAt
     });
     saveKeys();
-    pendingSessions.delete(token);
+
     addLog('KEY_GEN', `Cấp thành công key ${generatedKey} cho HWID ${session.hwid}`);
 
     res.send(`
@@ -230,7 +283,7 @@ app.get('/api/admin/dashboard', (req, res) => {
         ok: true,
         stats: {
             totalKeys: keysDatabase.size,
-            activeSessions: pendingSessions.size,
+            activeSessions: 0,
             link4mConfigured: LINK4M_TOKEN !== 'THAY_API_TOKEN_LINK4M_CUA_BAN_TAI_DAY'
         },
         keys: keysList,
