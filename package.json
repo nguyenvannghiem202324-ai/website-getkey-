@@ -1,13 +1,14 @@
 {
 "name": "nhat-hub-key-system",
 "version": "3.5.0",
-"description": "Nhat HUB Premium Key & Authentication System for Roblox Executables",
+"description": "Nhat HUB Link4M Automated Key System for Roblox Executables",
 "main": "server.js",
 "scripts": {
 "start": "node server.js",
 "dev": "node --watch server.js"
 },
 "dependencies": {
+"axios": "^1.6.0",
 "cors": "^2.8.5",
 "express": "^4.19.2"
 },
