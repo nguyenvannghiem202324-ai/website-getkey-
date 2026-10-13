@@ -3,50 +3,73 @@ const axios = require('axios');
 const crypto = require('crypto');
 const cors = require('cors');
 const path = require('path');
+const fs = require('fs');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Enable JSON parsing and CORS for Roblox & Web Requests
 app.use(express.json());
 app.use(cors());
-
-// Serve static frontend from the 'public' directory
 app.use(express.static(path.join(__dirname, 'public')));
 
 // ==========================================
-// CONFIGURATION: LINK4M API TOKEN
-// Place your Link4M API Token here or set it in process.env.LINK4M_TOKEN
+// CONFIGURATION & PERSISTENT STORAGE
 // ==========================================
-const LINK4M_TOKEN = process.env.LINK4M_TOKEN || '6abb3a6daf162d46ec29b472';
+let LINK4M_TOKEN = process.env.LINK4M_TOKEN || '6abb3a6daf162d46ec29b472';
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'nhathub2026';
+const DATA_FILE = path.join(__dirname, 'keys.json');
 
-// Memory Storage: 
-// keysDatabase: key -> { hwid, expiresAt }
-// pendingSessions: token -> { hwid, createdAt }
-const keysDatabase = new Map();
+let keysDatabase = new Map();
 const pendingSessions = new Map();
+const serverLogs = [];
 
-/**
- * Periodically purge expired sessions and keys (Every 30 mins)
- */
+function addLog(action, details) {
+    const timestamp = new Date().toLocaleTimeString('vi-VN');
+    serverLogs.unshift({ timestamp, action, details });
+    if (serverLogs.length > 50) serverLogs.pop();
+}
+
+function loadKeys() {
+    try {
+        if (fs.existsSync(DATA_FILE)) {
+            const rawData = fs.readFileSync(DATA_FILE, 'utf8');
+            const parsed = JSON.parse(rawData);
+            keysDatabase = new Map(Object.entries(parsed));
+            addLog('SYSTEM', `Đã tải thành công ${keysDatabase.size} key từ bộ nhớ lưu trữ.`);
+        }
+    } catch (err) {
+        addLog('ERROR', `Lỗi tải key: ${err.message}`);
+    }
+}
+
+function saveKeys() {
+    try {
+        const obj = Object.fromEntries(keysDatabase);
+        fs.writeFileSync(DATA_FILE, JSON.stringify(obj, null, 2), 'utf8');
+    } catch (err) {
+        addLog('ERROR', `Lỗi lưu key: ${err.message}`);
+    }
+}
+
+loadKeys();
+
+// Purge expired keys every 10 mins
 setInterval(() => {
     const now = Date.now();
-    for (const [token, session] of pendingSessions.entries()) {
-        if (now - session.createdAt > 30 * 60 * 1000) { // 30 mins timeout
-            pendingSessions.delete(token);
-        }
-    }
+    let updated = false;
     for (const [key, data] of keysDatabase.entries()) {
         if (now > data.expiresAt) {
             keysDatabase.delete(key);
+            updated = true;
         }
     }
-}, 30 * 60 * 1000);
+    if (updated) saveKeys();
+}, 10 * 60 * 1000);
 
-/**
- * API: Server Configuration Status Check
- * GET /api/status
- */
+// ==========================================
+// PUBLIC API ENDPOINTS
+// ==========================================
+
 app.get('/api/status', (req, res) => {
     const isConfigured = LINK4M_TOKEN && LINK4M_TOKEN !== 'THAY_API_TOKEN_LINK4M_CUA_BAN_TAI_DAY';
     res.json({
@@ -56,28 +79,21 @@ app.get('/api/status', (req, res) => {
     });
 });
 
-/**
- * API 1: Generate Link4M Verification URL (POST & GET support)
- * POST /api/getkey or GET /api/generate-link?hwid=HWID
- */
 const handleGenerateLink = async (req, res) => {
     const hwid = req.body?.hwid || req.query?.hwid || 'QUANTUM-DEVICE-SESSION';
     const cleanHWID = String(hwid).trim();
     const sessionToken = crypto.randomBytes(16).toString('hex');
 
-    // Store pending session
     pendingSessions.set(sessionToken, {
         hwid: cleanHWID,
         createdAt: Date.now()
     });
 
-    // Auto-detect base domain
     const protocol = req.headers['x-forwarded-proto'] || req.protocol;
     const host = req.get('host');
     const callbackUrl = `${protocol}://${host}/api/callback?token=${sessionToken}`;
 
     try {
-        // Shorten URL via Link4M API
         const response = await axios.get('https://link4m.co/api-shorten', {
             params: {
                 api: LINK4M_TOKEN,
@@ -93,193 +109,170 @@ const handleGenerateLink = async (req, res) => {
             shortenedLink = `https://link4m.co/st?api=${LINK4M_TOKEN}&url=${encodeURIComponent(callbackUrl)}`;
         }
 
-        return res.json({
-            ok: true,
-            success: true,
-            shortUrl: shortenedLink,
-            link: shortenedLink,
-            token: sessionToken
-        });
+        addLog('LINK4M', `Tạo link thành công cho HWID: ${cleanHWID}`);
+        return res.json({ ok: true, success: true, shortUrl: shortenedLink, link: shortenedLink });
     } catch (error) {
-        console.error('[Link4M API Request Failed]:', error.message);
-        
-        // Direct fallback Link4M URL format
+        addLog('ERROR', `Link4M API lỗi: ${error.message}`);
         const fallbackLink = `https://link4m.co/st?api=${LINK4M_TOKEN}&url=${encodeURIComponent(callbackUrl)}`;
-        return res.json({
-            ok: true,
-            success: true,
-            shortUrl: fallbackLink,
-            link: fallbackLink,
-            token: sessionToken
-        });
+        return res.json({ ok: true, success: true, shortUrl: fallbackLink, link: fallbackLink });
     }
 };
 
 app.post('/api/getkey', handleGenerateLink);
 app.get('/api/generate-link', handleGenerateLink);
 
-/**
- * API 2: Link4M Callback Landing Page after bypass completion
- * GET /api/callback?token=SESSION_TOKEN
- */
 app.get('/api/callback', (req, res) => {
     const { token } = req.query;
-
     if (!token || !pendingSessions.has(token)) {
-        return res.status(400).send(`
-            <!DOCTYPE html>
-            <html lang="vi">
-            <head>
-                <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>QUANTUM — Phiên Hết Hạn</title>
-                <style>
-                    body { background: #020813; color: #ff5378; font-family: Inter, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; text-align: center; }
-                    .card { background: #04182b; border: 1px solid #ff5378; padding: 30px; border-radius: 12px; max-width: 400px; width: 90%; box-shadow: 0 0 25px rgba(255,83,120,0.2); }
-                    h2 { margin-bottom: 10px; font-size: 20px; }
-                    p { color: #83cde8; font-size: 13px; line-height: 1.6; }
-                    a { color: #00dfff; text-decoration: none; font-weight: bold; }
-                </style>
-            </head>
-            <body>
-                <div class="card">
-                    <h2>❌ PHIÊN XÁC THỰC HẾT HẠN</h2>
-                    <p>Phiên làm việc Link4M không tồn tại hoặc đã quá thời gian chờ. Vui lòng quay lại để tạo link mới.</p>
-                    <p><a href="/">⌁ QUAY LẠI TRANG CHỦ</a></p>
-                </div>
-            </body>
-            </html>
-        `);
+        return res.status(400).send(`<h3>Phiên xác thực hết hạn hoặc không hợp lệ.</h3>`);
     }
 
     const session = pendingSessions.get(token);
-    
-    // Generate 24-Hour Key
     const randomCode = crypto.randomBytes(3).toString('hex').toUpperCase();
     const generatedKey = `NHAT-HUB-L4M-${randomCode}-24H`;
-    const DURATION_MS = 24 * 60 * 60 * 1000; // 24 Hours
-    const expiresAt = Date.now() + DURATION_MS;
+    const expiresAt = Date.now() + (24 * 60 * 60 * 1000);
 
-    // Save key linked to session HWID
     keysDatabase.set(generatedKey, {
         hwid: session.hwid,
+        createdAt: Date.now(),
         expiresAt: expiresAt
     });
-
-    // Remove pending session token
+    saveKeys();
     pendingSessions.delete(token);
+    addLog('KEY_GEN', `Cấp thành công key ${generatedKey} cho HWID ${session.hwid}`);
 
-    // Render Success Interface matching Quantum aesthetic
     res.send(`
         <!DOCTYPE html>
         <html lang="vi">
         <head>
             <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>QUANTUM — Kích Hoạt Key Thành Công</title>
-            <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+            <title>Kích Hoạt Key Thành Công</title>
             <style>
-                body { background: radial-gradient(ellipse at 50% 45%,#06213a,#020813 58%,#01050c); color: #c9f5ff; font-family: Inter, sans-serif; min-height: 100vh; display: flex; align-items: center; justify-content: center; margin: 0; padding: 20px; box-sizing: border-box; }
-                .panel { background: linear-gradient(135deg, #04182b, #010a14); border: 1px solid #28ff9b; box-shadow: 0 0 35px rgba(40,255,155,0.25); padding: 32px; border-radius: 16px; max-width: 440px; width: 100%; text-align: center; }
-                .icon { font-size: 42px; color: #28ff9b; text-shadow: 0 0 20px #28ff9b; margin-bottom: 12px; }
-                h2 { font-size: 20px; letter-spacing: .12em; color: #fff; margin: 0 0 8px 0; }
-                p { color: #83bdd5; font-size: 13px; margin-bottom: 20px; }
-                .key-box { background: #010c18; border: 1px solid #00dfff; padding: 16px; border-radius: 8px; font-family: monospace; font-size: 18px; color: #28ff9b; font-weight: bold; letter-spacing: 1px; word-break: break-all; margin-bottom: 20px; }
-                .btn { width: 100%; padding: 14px; background: linear-gradient(110deg,#034365,#00658b); border: 1px solid #00dfff; color: #fff; font-weight: bold; font-size: 13px; letter-spacing: 1px; cursor: pointer; border-radius: 8px; box-shadow: 0 0 15px rgba(0,223,255,0.3); }
-                .btn:hover { filter: brightness(1.2); }
-                .info { margin-top: 20px; text-align: left; font-size: 11px; color: #638da4; line-height: 1.8; border-top: 1px solid #0d4761; padding-top: 12px; }
+                body { background: #030308; color: #00f0ff; font-family: monospace; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+                .card { background: #080914; border: 1px solid rgba(0,240,255,0.3); padding: 40px; border-radius: 16px; text-align: center; box-shadow: 0 0 30px rgba(0,240,255,0.2); max-width: 400px; width: 90%; }
+                h2 { color: #fff; margin-bottom: 10px; font-size: 18px; }
+                .key { background: #030308; border: 1px solid #10b981; color: #10b981; padding: 15px; font-size: 16px; font-weight: bold; border-radius: 8px; margin: 20px 0; word-break: break-all; }
+                button { background: #00f0ff; color: #030308; border: none; padding: 12px 20px; font-weight: bold; border-radius: 8px; cursor: pointer; width: 100%; font-family: monospace; }
             </style>
         </head>
         <body>
-            <div class="panel">
-                <div class="icon">⛨</div>
+            <div class="card">
                 <h2>XÁC THỰC LINK4M THÀNH CÔNG</h2>
-                <p>Quyền truy cập VIP 24 Giờ của Nhật HUB đã được cấp phép.</p>
-
-                <div class="key-box" id="keyVal">${generatedKey}</div>
-
-                <button class="btn" onclick="copyKey()">SAO CHÉP KEY VÀO ROBLOX</button>
-
-                <div class="info">
-                    <div>• <b>HWID Đăng Ký:</b> <span style="color:#00dfff">${session.hwid}</span></div>
-                    <div>• <b>Thời Gian Sử Dụng:</b> <span style="color:#28ff9b">24 Giờ</span></div>
-                    <div>• <b>Nguồn Xác Thực:</b> <span style="color:#83bdd5">Link4M Gateway</span></div>
-                </div>
+                <p style="color:#94a3b8; font-size:12px;">Key có hiệu lực 24 giờ cho Nhật HUB.</p>
+                <div class="key" id="k">${generatedKey}</div>
+                <button onclick="navigator.clipboard.writeText('${generatedKey}'); alert('Đã copy key!');">SAO CHÉP KEY</button>
             </div>
-
-            <script>
-                confetti({ particleCount: 90, spread: 70, origin: { y: 0.6 } });
-                function copyKey() {
-                    const k = document.getElementById('keyVal').innerText;
-                    navigator.clipboard.writeText(k);
-                    alert("Đã copy mã Key! Vui lòng dán vào Roblox Script.");
-                }
-            </script>
         </body>
         </html>
     `);
 });
 
-/**
- * API 3: Verify Key Status from Roblox Luau Script
- * GET /api/verify?key=KEY_VALUE&hwid=HWID_VALUE
- */
 app.get('/api/verify', (req, res) => {
     const { key, hwid } = req.query;
+    if (!key) return res.status(400).json({ success: false, message: 'Thiếu key' });
 
-    if (!key) {
-        return res.status(400).json({
-            success: false,
-            message: 'Thiếu thông tin Key xác thực!'
-        });
+    const record = keysDatabase.get(String(key).trim());
+    if (!record) return res.json({ success: false, message: 'Key không tồn tại trên hệ thống.' });
+
+    if (hwid && record.hwid !== 'QUANTUM-DEVICE-SESSION' && record.hwid !== String(hwid).trim()) {
+        return res.json({ success: false, message: 'Key này thuộc về thiết bị (HWID) khác!' });
     }
 
-    const cleanKey = String(key).trim();
-    const cleanHWID = hwid ? String(hwid).trim() : null;
-
-    const record = keysDatabase.get(cleanKey);
-
-    if (!record) {
-        return res.json({
-            success: false,
-            message: 'Mã Key không tồn tại hoặc chưa qua bước vượt Link4M!'
-        });
-    }
-
-    // HWID Binding Check
-    if (cleanHWID && record.hwid !== 'QUANTUM-DEVICE-SESSION' && record.hwid !== cleanHWID) {
-        return res.json({
-            success: false,
-            message: 'Key này được đăng ký cho thiết bị (HWID) khác!'
-        });
-    }
-
-    // Expiration Check
     if (Date.now() > record.expiresAt) {
-        keysDatabase.delete(cleanKey);
-        return res.json({
-            success: false,
-            message: 'Key đã hết hạn sử dụng 24 Giờ. Vui lòng Get Key lại!'
-        });
+        keysDatabase.delete(String(key).trim());
+        saveKeys();
+        return res.json({ success: false, message: 'Key đã hết hạn 24 giờ.' });
     }
 
-    const remainingSeconds = Math.floor((record.expiresAt - Date.now()) / 1000);
-    const hours = Math.floor(remainingSeconds / 3600);
-    const minutes = Math.floor((remainingSeconds % 3600) / 60);
+    const remainingSecs = Math.floor((record.expiresAt - Date.now()) / 1000);
+    const h = Math.floor(remainingSecs / 3600);
+    const m = Math.floor((remainingSecs % 3600) / 60);
 
     return res.json({
         success: true,
-        message: 'Xác thực thành công! Quyền truy cập Nhật HUB VIP hợp lệ.',
-        formattedRemaining: `${hours} giờ ${minutes} phút`,
-        expiresAt: record.expiresAt
+        message: 'Key hợp lệ!',
+        formattedRemaining: `${h} giờ ${m} phút`
     });
 });
 
-// Fallback Route for SPA
+// ==========================================
+// ADMIN DASHBOARD API ENDPOINTS
+// ==========================================
+
+app.post('/api/admin/login', (req, res) => {
+    const { password } = req.body;
+    if (password === ADMIN_PASSWORD) {
+        addLog('ADMIN', 'Đăng nhập trang quản trị thành công.');
+        return res.json({ ok: true, token: 'nhat-hub-admin-token-secure' });
+    }
+    addLog('WARNING', 'Đăng nhập admin thất bại do sai mật khẩu.');
+    res.status(401).json({ ok: false, message: 'Mật khẩu quản trị không đúng!' });
+});
+
+app.get('/api/admin/dashboard', (req, res) => {
+    const authHeader = req.headers['authorization'];
+    if (!authHeader || !authHeader.includes('nhat-hub-admin-token-secure')) {
+        return res.status(403).json({ ok: false, message: 'Unauthorized access.' });
+    }
+
+    const keysList = [];
+    for (const [key, data] of keysDatabase.entries()) {
+        keysList.push({
+            key,
+            hwid: data.hwid,
+            createdAt: data.createdAt,
+            expiresAt: data.expiresAt,
+            expired: Date.now() > data.expiresAt
+        });
+    }
+
+    res.json({
+        ok: true,
+        stats: {
+            totalKeys: keysDatabase.size,
+            activeSessions: pendingSessions.size,
+            link4mConfigured: LINK4M_TOKEN !== 'THAY_API_TOKEN_LINK4M_CUA_BAN_TAI_DAY'
+        },
+        keys: keysList,
+        logs: serverLogs
+    });
+});
+
+app.post('/api/admin/keys/delete', (req, res) => {
+    const authHeader = req.headers['authorization'];
+    if (!authHeader || !authHeader.includes('nhat-hub-admin-token-secure')) {
+        return res.status(403).json({ ok: false, message: 'Unauthorized.' });
+    }
+
+    const { key } = req.body;
+    if (keysDatabase.has(key)) {
+        keysDatabase.delete(key);
+        saveKeys();
+        addLog('ADMIN', `Đã xóa key: ${key}`);
+        return res.json({ ok: true, message: `Đã xóa key ${key} thành công.` });
+    }
+    res.status(404).json({ ok: false, message: 'Không tìm thấy key.' });
+});
+
+app.post('/api/admin/config', (req, res) => {
+    const authHeader = req.headers['authorization'];
+    if (!authHeader || !authHeader.includes('nhat-hub-admin-token-secure')) {
+        return res.status(403).json({ ok: false, message: 'Unauthorized.' });
+    }
+
+    const { token } = req.body;
+    if (token) {
+        LINK4M_TOKEN = token.trim();
+        addLog('ADMIN', 'Đã cập nhật Link4M API Token mới.');
+        return res.json({ ok: true, message: 'Cập nhật Link4M Token thành công!' });
+    }
+    res.status(400).json({ ok: false, message: 'Token không hợp lệ.' });
+});
+
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 app.listen(PORT, () => {
-    console.log(`[QUANTUM GATEWAY] Server operational on port ${PORT}`);
+    console.log(`[NHẬT HUB] Server & Admin Panel running on port ${PORT}`);
 });
