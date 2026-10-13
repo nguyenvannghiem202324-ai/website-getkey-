@@ -1,7 +1,7 @@
 {
 "name": "nhat-hub-key-system",
 "version": "3.5.0",
-"description": "Nhat HUB Link4M Automated Key System for Roblox Executables",
+"description": "Nhat HUB Link4M Automated Key System for Roblox Executables - Quantum Theme",
 "main": "server.js",
 "scripts": {
 "start": "node server.js",
