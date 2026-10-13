@@ -1,62 +1,482 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" class="dark scroll-smooth">
 <head>
     <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Get Key System - Nhật HUB</title>
-                <style>
-                        * { box-sizing: border-box; margin: 0; padding: 0; }
-                                body { background-color: #0f172a; color: #f8fafc; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
-                                        .container { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 30px; max-width: 450px; width: 100%; text-align: center; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5); }
-                                                h1 { color: #38bdf8; font-size: 24px; margin-bottom: 10px; }
-                                                        p { color: #94a3b8; font-size: 14px; margin-bottom: 20px; }
-                                                                .hwid-box { background: #0f172a; border: 1px solid #475569; padding: 12px; border-radius: 8px; color: #cbd5e1; font-family: monospace; font-size: 13px; word-break: break-all; margin-bottom: 20px; }
-                                                                        .btn-get { background: linear-gradient(135deg, #0284c7, #2563eb); color: white; border: none; padding: 14px 28px; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: all 0.2s; width: 100%; box-shadow: 0 4px 12px rgba(37,99,235,0.3); }
-                                                                                .btn-get:hover { background: linear-gradient(135deg, #0369a1, #1d4ed8); transform: translateY(-2px); }
-                                                                                        .loading { display: none; color: #38bdf8; margin-top: 15px; font-size: 14px; }
-                                                                                            </style>
-                                                                                            </head>
-                                                                                            <body>
-                                                                                                <div class="container">
-                                                                                                        <h1>NHẬT HUB - GET KEY</h1>
-                                                                                                                <p>Vượt qua liên kết quảng cáo để nhận Key kích hoạt 24 Giờ cho Roblox.</p>
-                                                                                                                        
-                                                                                                                                <div class="hwid-box" id="hwidDisplay">Đang tải thông tin HWID...</div>
-                                                                                                                                        
-                                                                                                                                                <button class="btn-get" id="btnGetLink" onclick="generateLink()">LẤY LINK GET KEY</button>
-                                                                                                                                                        <div class="loading" id="loadingText">🔄 Đang khởi tạo link, vui lòng chờ...</div>
-                                                                                                                                                            </div>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NHẬT HUB VIP — Link4M Automated Key System</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;600;700&family=Syncopate:wght@700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
-                                                                                                                                                                <script>
-                                                                                                                                                                        const urlParams = new URLSearchParams(window.location.search);
-                                                                                                                                                                                const hwid = urlParams.get('hwid') || 'HWID-TEST-DEMO-12345';
-                                                                                                                                                                                        document.getElementById('hwidDisplay').innerText = "HWID: " + hwid;
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        cyber: {
+                            void: '#030308',
+                            dark: '#080914',
+                            border: 'rgba(0, 240, 255, 0.18)',
+                            cyan: '#00f0ff',
+                            purple: '#a855f7',
+                            pink: '#ff007f',
+                            green: '#10b981',
+                            amber: '#f59e0b'
+                        }
+                    },
+                    fontFamily: {
+                        sync: ['Syncopate', 'sans-serif'],
+                        sans: ['Space Grotesk', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace']
+                    },
+                    animation: {
+                        'pulse-glow': 'pulseGlow 2.5s infinite ease-in-out',
+                        'float': 'float 6s ease-in-out infinite'
+                    },
+                    keyframes: {
+                        pulseGlow: {
+                            '0%, 100%': { boxShadow: '0 0 15px rgba(0, 240, 255, 0.3), inset 0 0 10px rgba(0, 240, 255, 0.1)' },
+                            '50%': { boxShadow: '0 0 30px rgba(0, 240, 255, 0.7), inset 0 0 20px rgba(0, 240, 255, 0.3)' }
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-8px)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
 
-                                                                                                                                                                                                async function generateLink() {
-                                                                                                                                                                                                            const btn = document.getElementById('btnGetLink');
-                                                                                                                                                                                                                        const loading = document.getElementById('loadingText');
+    <style>
+        body { background-color: #030308; color: #f1f5f9; overflow-x: hidden; }
+        .cyber-grid {
+            background-size: 40px 40px;
+            background-image: 
+                linear-gradient(to right, rgba(0, 240, 255, 0.04) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(0, 240, 255, 0.04) 1px, transparent 1px);
+        }
+        .glass-panel {
+            background: rgba(10, 12, 28, 0.75);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(0, 240, 255, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.6);
+        }
+        .btn-cyber-primary {
+            background: linear-gradient(135deg, #00f0ff 0%, #00a8ff 100%);
+            color: #030308;
+            font-weight: 800;
+            letter-spacing: 1px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .btn-cyber-primary:hover {
+            box-shadow: 0 0 25px rgba(0, 240, 255, 0.8);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
 
-                                                                                                                                                                                                                                    btn.style.display = 'none';
-                                                                                                                                                                                                                                                loading.style.display = 'block';
+<body class="min-h-screen flex flex-col justify-between selection:bg-cyber-cyan selection:text-black">
 
-                                                                                                                                                                                                                                                            try {
-                                                                                                                                                                                                                                                                            const res = await fetch(`/api/generate-link?hwid=${encodeURIComponent(hwid)}`);
-                                                                                                                                                                                                                                                                                            const data = await res.json();
+    <canvas id="bg-canvas" class="fixed top-0 left-0 w-full h-full pointer-events-none z-0 opacity-60"></canvas>
+    <div class="fixed inset-0 cyber-grid pointer-events-none z-0"></div>
 
-                                                                                                                                                                                                                                                                                                            if (data.success && data.link) {
-                                                                                                                                                                                                                                                                                                                                window.location.href = data.link;
-                                                                                                                                                                                                                                                                                                                                                } else {
-                                                                                                                                                                                                                                                                                                                                                                    alert("Có lỗi xảy ra: " + (data.error || "Không lấy được link"));
-                                                                                                                                                                                                                                                                                                                                                                                        btn.style.display = 'block';
-                                                                                                                                                                                                                                                                                                                                                                                                            loading.style.display = 'none';
-                                                                                                                                                                                                                                                                                                                                                                                                                            }
-                                                                                                                                                                                                                                                                                                                                                                                                                                        } catch (e) {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                        alert("Lỗi kết nối Server!");
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                        btn.style.display = 'block';
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        loading.style.display = 'none';
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    }
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            }
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </script>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </body>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </html>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+    <!-- Toast Notification -->
+    <div id="toast-banner" class="hidden fixed bottom-6 right-6 z-50 transform transition-all p-4 rounded-xl glass-panel border-l-4 border-l-cyber-cyan flex items-center justify-between text-xs font-mono text-cyber-cyan shadow-2xl max-w-sm">
+        <div class="flex items-center gap-3">
+            <i class="fa-solid fa-bell"></i>
+            <span id="toast-text">Alert message...</span>
+        </div>
+        <button onclick="closeToast()" class="ml-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+
+    <!-- Header -->
+    <header class="relative z-40 border-b border-cyber-border/60 bg-cyber-void/80 backdrop-blur-xl sticky top-0">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('getkey')">
+                <div class="relative w-12 h-12 rounded-xl bg-gradient-to-tr from-cyber-purple via-cyber-pink to-cyber-cyan p-0.5 animate-pulse-glow">
+                    <div class="w-full h-full bg-cyber-void rounded-[10px] flex items-center justify-center text-cyber-cyan text-xl">
+                        <i class="fa-solid fa-atom animate-spin" style="animation-duration: 12s;"></i>
+                    </div>
+                </div>
+                <div>
+                    <h1 class="font-sync font-extrabold text-xl tracking-wider text-white flex items-center gap-2">
+                        NHẬT<span class="text-cyber-cyan">HUB</span>
+                        <span class="text-[9px] px-2 py-0.5 rounded-full bg-cyber-cyan/10 border border-cyber-cyan/40 text-cyber-cyan font-mono uppercase">
+                            LINK4M GATEWAY
+                        </span>
+                    </h1>
+                    <p class="text-[10px] text-gray-400 font-mono flex items-center gap-1.5">
+                        <span class="w-2 h-2 rounded-full bg-cyber-green inline-block animate-ping"></span>
+                        CỔNG XÁC THỰC KEY 24H
+                    </p>
+                </div>
+            </div>
+
+            <nav class="hidden md:flex items-center space-x-2 bg-cyber-dark/80 p-1.5 rounded-2xl border border-cyber-border/60">
+                <button onclick="switchTab('getkey')" id="tab-btn-getkey" class="px-5 py-2.5 rounded-xl text-xs font-mono font-bold text-cyber-cyan bg-cyber-cyan/10 border border-cyber-cyan/50">
+                    <i class="fa-solid fa-link mr-1.5"></i> GET KEY (LINK4M)
+                </button>
+                <button onclick="switchTab('verify')" id="tab-btn-verify" class="px-5 py-2.5 rounded-xl text-xs font-mono font-bold text-gray-400 hover:text-white">
+                    <i class="fa-solid fa-shield-halved mr-1.5"></i> KIỂM TRA KEY
+                </button>
+                <button onclick="switchTab('code')" id="tab-btn-code" class="px-5 py-2.5 rounded-xl text-xs font-mono font-bold text-gray-400 hover:text-white">
+                    <i class="fa-solid fa-code mr-1.5"></i> SCRIPT LUAU
+                </button>
+            </nav>
+
+            <button onclick="toggleAudio()" class="w-10 h-10 rounded-xl bg-cyber-dark border border-cyber-border text-gray-400 hover:text-cyber-cyan flex items-center justify-center">
+                <i class="fa-solid fa-volume-high" id="sound-icon"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full space-y-8">
+
+        <!-- TAB 1: GET KEY VIA LINK4M -->
+        <section id="tab-getkey" class="tab-content transition-all duration-500 space-y-8">
+            <div class="relative rounded-3xl glass-panel p-8 sm:p-10 overflow-hidden border border-cyber-cyan/30 animate-float">
+                <div class="relative z-10 max-w-3xl space-y-3">
+                    <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-cyber-cyan/10 border border-cyber-cyan/30 text-cyber-cyan text-xs font-mono font-bold uppercase">
+                        <i class="fa-solid fa-fire text-cyber-pink animate-pulse"></i> NHẬT HUB — XÁC THỰC QUA LINK4M
+                    </div>
+                    <h2 class="text-3xl sm:text-4xl font-sync font-extrabold text-white">
+                        HỆ THỐNG GET KEY TỰ ĐỘNG LINK4M
+                    </h2>
+                    <p class="text-gray-300 text-sm font-sans">
+                        Nhập HWID thiết bị Roblox của bạn, vượt qua liên kết xác thực Link4M để kích hoạt mã Key 24 Giờ cho Nhật HUB Script.
+                    </p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <div class="lg:col-span-8 glass-panel p-6 sm:p-8 rounded-3xl border border-cyber-border shadow-2xl">
+                    <div class="flex items-center justify-between mb-8 pb-4 border-b border-cyber-border/60">
+                        <div>
+                            <h3 class="font-sync font-bold text-lg text-white flex items-center gap-2.5">
+                                <i class="fa-solid fa-terminal text-cyber-cyan"></i> BẢNG ĐIỀU KHIỂN LINK4M
+                            </h3>
+                            <p class="text-xs font-mono text-gray-400 mt-0.5">Tiến trình tạo link xác minh</p>
+                        </div>
+                        <span id="demo-status-badge" class="px-3.5 py-1 rounded-full text-xs font-mono font-bold bg-amber-500/10 text-amber-400 border border-amber-500/30">
+                            Sẵn Sàng
+                        </span>
+                    </div>
+
+                    <!-- Steps Progress Indicator -->
+                    <div class="mb-10 space-y-2">
+                        <div class="flex justify-between text-[11px] font-mono text-gray-400">
+                            <span id="step-lbl-1" class="text-cyber-cyan font-bold">1. NHẬP HWID</span>
+                            <span id="step-lbl-2">2. CHUYỂN LINK4M</span>
+                            <span id="step-lbl-3">3. NHẬN KEY VIP 24H</span>
+                        </div>
+                        <div class="w-full h-3 bg-cyber-void rounded-full overflow-hidden p-0.5 border border-cyber-border/60">
+                            <div id="sim-progress" class="h-full bg-gradient-to-r from-cyber-cyan via-cyber-purple to-cyber-pink w-1/3 transition-all duration-700 rounded-full"></div>
+                        </div>
+                    </div>
+
+                    <!-- Step 1 Form -->
+                    <div id="step-1-content" class="space-y-6">
+                        <div class="space-y-2">
+                            <label class="block text-xs font-mono text-gray-300 uppercase">
+                                <i class="fa-solid fa-microchip text-cyber-cyan mr-1.5"></i> HWID Thiết Bị Roblox Của Bạn:
+                            </label>
+                            <div class="flex flex-col sm:flex-row gap-3">
+                                <input type="text" id="input-hwid" class="flex-1 bg-cyber-void border border-cyber-border focus:border-cyber-cyan rounded-xl px-4 py-3.5 text-sm text-cyber-cyan font-mono outline-none" placeholder="Nhập HWID từ Roblox...">
+                                <button onclick="generateRandomHWID()" class="px-5 py-3.5 bg-cyber-dark border border-cyber-border hover:border-cyber-purple text-gray-300 rounded-xl text-xs font-mono whitespace-nowrap">
+                                    Random HWID
+                                </button>
+                            </div>
+                        </div>
+                        <button onclick="requestLink4MLink()" class="btn-cyber-primary w-full py-4 rounded-xl text-sm font-sync tracking-wider flex items-center justify-center gap-2">
+                            <span>TẠO LINK4M XÁC THỰC</span> <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+
+                    <!-- Step 2 Link Generated -->
+                    <div id="step-2-content" class="hidden space-y-6">
+                        <div class="p-8 rounded-2xl glass-panel text-center space-y-4 border border-cyber-purple/40">
+                            <div class="w-16 h-16 mx-auto rounded-2xl bg-cyber-purple/20 text-cyber-purple flex items-center justify-center text-3xl border border-cyber-purple/40 animate-pulse">
+                                <i class="fa-solid fa-up-right-from-square"></i>
+                            </div>
+                            <h4 class="font-sync font-bold text-white text-base">LINK XÁC THỰC LINK4M ĐÃ SẴN SÀNG</h4>
+                            <p class="text-xs text-gray-400 font-mono">Bấm vào nút bên dưới để mở liên kết Link4M. Hoàn thành vượt mã captcha để nhận Key tự động.</p>
+                        </div>
+
+                        <a id="btn-goto-link4m" href="#" target="_blank" onclick="onLink4MClicked()" class="btn-cyber-primary block text-center w-full py-4 rounded-xl text-sm font-sync tracking-wider">
+                            MỞ TRANG LINK4M NGAY <i class="fa-solid fa-external-link-alt ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Guidance Side Panel -->
+                <div class="lg:col-span-4 space-y-6">
+                    <div class="glass-panel p-6 rounded-3xl border border-cyber-border space-y-4">
+                        <h4 class="font-sync font-bold text-white text-sm flex items-center gap-2">
+                            <i class="fa-solid fa-circle-info text-cyber-cyan"></i> BƯỚC VƯỢT LINK4M
+                        </h4>
+                        <ol class="text-xs text-gray-300 space-y-3 font-sans list-decimal list-inside leading-relaxed">
+                            <li>Nhập mã HWID của thiết bị hoặc để mặc định nếu tự lấy từ Script.</li>
+                            <li>Bấm <strong>"TẠO LINK4M XÁC THỰC"</strong> để nhận link rút gọn.</li>
+                            <li>Hoàn thành yêu cầu captcha / tìm kiếm bài viết trên trang Link4M.</li>
+                            <li>Mã <strong>Key VIP 24h</strong> sẽ tự động được cấp và cấp phép cho HWID của bạn!</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 2: VERIFY KEY -->
+        <section id="tab-verify" class="tab-content hidden space-y-8">
+            <div class="max-w-2xl mx-auto glass-panel p-8 rounded-3xl border border-cyber-border space-y-6 shadow-2xl">
+                <div class="border-b border-cyber-border/60 pb-4">
+                    <h3 class="font-sync font-bold text-white text-lg flex items-center gap-2">
+                        <i class="fa-solid fa-shield-halved text-cyber-purple"></i> KIỂM TRA MÃ KEY LINK4M
+                    </h3>
+                    <p class="text-xs font-mono text-gray-400 mt-1">Xác minh thời gian sử dụng và thiết bị đã đăng ký</p>
+                </div>
+
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-mono text-gray-300 mb-1">HWID Thiết Bị:</label>
+                        <input type="text" id="check-hwid-input" class="w-full bg-cyber-void border border-cyber-border rounded-xl px-4 py-3 text-xs font-mono text-gray-200 outline-none focus:border-cyber-purple" placeholder="Nhập HWID...">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-mono text-gray-300 mb-1">Mã Key:</label>
+                        <input type="text" id="check-key-input" class="w-full bg-cyber-void border border-cyber-border rounded-xl px-4 py-3 text-xs font-mono text-cyber-cyan outline-none focus:border-cyber-cyan" placeholder="NHAT-HUB-L4M-XXXX-24H">
+                    </div>
+                    <button onclick="verifyKeyInTool()" class="w-full py-4 bg-gradient-to-r from-cyber-purple to-pink-600 text-white font-sync text-xs font-bold rounded-xl tracking-wider shadow-lg shadow-purple-900/30">
+                        XÁC MINH TRỰC TUYẾN
+                    </button>
+                </div>
+
+                <div id="check-result-box" class="p-4 rounded-xl glass-panel hidden text-xs font-mono"></div>
+            </div>
+        </section>
+
+        <!-- TAB 3: LUAU CODE INTEGRATION -->
+        <section id="tab-code" class="tab-content hidden space-y-8">
+            <div class="glass-panel p-8 rounded-3xl border border-cyber-border space-y-4">
+                <div class="flex items-center justify-between border-b border-cyber-border/60 pb-4">
+                    <h3 class="font-sync font-bold text-white text-lg flex items-center gap-2">
+                        <i class="fa-solid fa-code text-cyber-pink"></i> INTEGRATION SCRIPT (ROBLOX LUAU)
+                    </h3>
+                    <button onclick="copyScriptCode()" class="px-4 py-2 bg-cyber-pink/20 text-cyber-pink rounded-xl text-xs font-mono font-bold border border-cyber-pink/40">
+                        <i class="fa-solid fa-copy mr-1"></i> Copy Code
+                    </button>
+                </div>
+                
+                <pre class="bg-cyber-void p-5 rounded-2xl border border-cyber-border/80 overflow-x-auto text-xs font-mono text-gray-300 leading-relaxed"><code id="luau-code-block">local HttpService = game:GetService("HttpService")
+local RbxAnalyticsService = game:GetService("RbxAnalyticsService")
+
+-- ĐƯỜNG LINK SERVER CỦA BẠN TRÊN RENDER
+local DOMAIN = "https://website-getkey-script.onrender.com"
+local hwid = RbxAnalyticsService:GetClientId()
+
+-- Lấy link GetKey Link4M cho người chơi
+local function getLink4MUrl()
+    local url = DOMAIN .. "/?hwid=" .. HttpService:UrlEncode(hwid)
+    if setclipboard then
+        setclipboard(url)
+        print("✅ [Nhật HUB] Đã copy link GetKey Link4M vào bộ nhớ tạm!")
+    end
+    return url
+end
+
+-- Hàm xác thực Key 24 tiếng từ Roblox Script
+local function verifyKey(userKey)
+    local checkUrl = DOMAIN .. "/api/verify?key=" .. HttpService:UrlEncode(userKey) .. "&hwid=" .. HttpService:UrlEncode(hwid)
+    local success, response = pcall(function() return game:HttpGet(checkUrl) end)
+    
+    if success then
+        local data = HttpService:JSONDecode(response)
+        if data.success then
+            print("✅ [Nhật HUB] " .. data.message)
+            print("⏰ Thời gian còn lại: " .. data.formattedRemaining)
+            return true
+        else
+            warn("❌ [Nhật HUB] " .. data.message)
+        end
+    else
+        warn("❌ [Nhật HUB] Lỗi kết nối đến Server xác thực!")
+    end
+    return false
+end
+
+-- Tự động copy link Get Key khi người chơi mở Script
+getLink4MUrl()</code></pre>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="border-t border-cyber-border/40 bg-cyber-void/90 py-6 text-center text-xs text-gray-500 font-mono">
+        © 2026 NHẬT HUB — Powered by Link4M Key System Integration
+    </footer>
+
+    <script>
+        // Background Particle Canvas Network
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function initCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            particles = [];
+            for(let i=0; i < Math.floor(canvas.width / 30); i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    vx: (Math.random() - 0.5) * 0.5,
+                    vy: (Math.random() - 0.5) * 0.5,
+                    color: Math.random() > 0.5 ? '#00f0ff' : '#a855f7'
+                });
+            }
+        }
+
+        function drawParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                p.x += p.vx; p.y += p.vy;
+                if(p.x < 0 || p.x > canvas.width) p.vx *= -1;
+                if(p.y < 0 || p.y > canvas.height) p.vy *= -1;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 1.5, 0, Math.PI * 2);
+                ctx.fillStyle = p.color;
+                ctx.fill();
+            });
+            requestAnimationFrame(drawParticles);
+        }
+
+        window.addEventListener('resize', initCanvas);
+        initCanvas(); drawParticles();
+
+        // Sound Effects Engine
+        let soundOn = true;
+        let audioCtx = null;
+
+        function playBeep(freq = 600) {
+            if(!soundOn) return;
+            if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.frequency.value = freq;
+            gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            osc.start(); osc.stop(audioCtx.currentTime + 0.1);
+        }
+
+        function toggleAudio() {
+            soundOn = !soundOn;
+            document.getElementById('sound-icon').className = soundOn ? "fa-solid fa-volume-high" : "fa-solid fa-volume-xmark";
+        }
+
+        // Auto Load HWID from URL Query Parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        let currentHWID = urlParams.get('hwid') || "NHAT-HUB-L4M-" + Math.random().toString(36).substring(2, 8).toUpperCase();
+        document.getElementById('input-hwid').value = currentHWID;
+
+        function switchTab(tabName) {
+            playBeep(600);
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`tab-${tabName}`).classList.remove('hidden');
+        }
+
+        function generateRandomHWID() {
+            playBeep(700);
+            currentHWID = "NHAT-HUB-L4M-" + Math.random().toString(36).substring(2, 8).toUpperCase();
+            document.getElementById('input-hwid').value = currentHWID;
+        }
+
+        async function requestLink4MLink() {
+            playBeep(800);
+            const hwidInput = document.getElementById('input-hwid').value.trim();
+            if(!hwidInput) {
+                showToast("Vui lòng nhập HWID thiết bị!");
+                return;
+            }
+
+            try {
+                const res = await fetch(`/api/generate-link?hwid=${encodeURIComponent(hwidInput)}`);
+                const data = await res.json();
+
+                if(data.success && data.link) {
+                    document.getElementById('btn-goto-link4m').href = data.link;
+                    
+                    document.getElementById('step-1-content').classList.add('hidden');
+                    document.getElementById('step-2-content').classList.remove('hidden');
+                    
+                    document.getElementById('sim-progress').style.width = '66%';
+                    document.getElementById('step-lbl-2').className = "text-cyber-cyan font-bold";
+                    
+                    showToast("Đã tạo liên kết Link4M thành công!");
+                } else {
+                    showToast("Không thể khởi tạo link Link4M!");
+                }
+            } catch(e) {
+                showToast("Lỗi kết nối tới Server Get Key!");
+            }
+        }
+
+        function onLink4MClicked() {
+            showToast("Đã mở trang Link4M. Vui lòng vượt captcha để nhận Key!");
+        }
+
+        async function verifyKeyInTool() {
+            playBeep(600);
+            const h = document.getElementById('check-hwid-input').value.trim();
+            const k = document.getElementById('check-key-input').value.trim();
+            const resBox = document.getElementById('check-result-box');
+            
+            if(!h || !k) {
+                showToast("Vui lòng nhập đầy đủ HWID và Mã Key!");
+                return;
+            }
+
+            resBox.classList.remove('hidden');
+
+            try {
+                const res = await fetch(`/api/verify?key=${encodeURIComponent(k)}&hwid=${encodeURIComponent(h)}`);
+                const data = await res.json();
+
+                if(data.success) {
+                    resBox.className = "p-4 rounded-xl glass-panel border border-cyber-green/50 text-cyber-green font-mono text-xs";
+                    resBox.innerText = `✅ ACTIVE: ${data.message} (Còn lại: ${data.formattedRemaining})`;
+                } else {
+                    resBox.className = "p-4 rounded-xl glass-panel border border-red-500/50 text-red-400 font-mono text-xs";
+                    resBox.innerText = `❌ LỖI: ${data.message}`;
+                }
+            } catch(e) {
+                resBox.className = "p-4 rounded-xl glass-panel border border-red-500/50 text-red-400 font-mono text-xs";
+                resBox.innerText = "Lỗi hệ thống khi kiểm tra Key!";
+            }
+        }
+
+        function copyScriptCode() {
+            const code = document.getElementById('luau-code-block').innerText;
+            navigator.clipboard.writeText(code);
+            showToast("Đã copy Roblox Luau integration code!");
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast-banner');
+            document.getElementById('toast-text').innerText = msg;
+            toast.classList.remove('hidden');
+            setTimeout(() => toast.classList.add('hidden'), 3500);
+        }
+
+        function closeToast() {
+            document.getElementById('toast-banner').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
